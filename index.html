@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<htmi>
+<head>
+<title>
+ATOM CORE
+</title>
+</head>
+<body style='background-color: rgb(0,0,0);'>
+<script type="text/javascript">
+;(()=>{
+	let canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	let width, height, gradient, ctx;
+	let canvas1 = document.createElement('canvas');
+	let ctx1, width1, height1, gradient1;
+	let radiusCoefficient;
+	function resize () {
+		width = Math.floor(document.body.clientWidth / 1);
+		height = Math.floor(document.body.clientWidth / 2);
+		canvas.width = width;
+		canvas.height = height;
+		radiusCoefficient = Math.pow((width / 1500), 0.7);
+		ctx = canvas.getContext('2d');
+		width1 = Math.floor(width / 4);
+		height1 = Math.floor(height / 4);
+		canvas1.width = width1;
+		canvas1.height = height1;
+		ctx1 = canvas1.getContext('2d');
+		gradient1 = ctx1.createRadialGradient(width1 / 2, height1 / 2, 0, width1 / 2, height1 / 2, Math.min(width1, height1) / 2);
+		gradient1.addColorStop(0, 'rgb(0,0,50)');
+		gradient1.addColorStop(1, 'rgb(0,0,0)');
+	}
+	window.addEventListener('resize', resize, false);
+	resize();
+	let arrayVertices, arrayEdges;
+	function initVertices (n) {
+		arrayVertices = [];
+		let massIncreaseCoeff = Math.pow(1000, 1 / n);
+		for (let i = 0; i < n; i++) {
+			let vertexObject = {
+				mass: 0.1 + 0.1 * Math.pow(massIncreaseCoeff, i),
+				px: 0.5 + (1 / Math.pow(i, 0.5)) * (0.5 - Math.random()),
+				py: 0.5 + (1 / Math.pow(i, 0.5)) * (0.5 - Math.random()),
+				vx: 0,
+				vy: 0
+			};
+			arrayVertices.push(vertexObject);
+		}
+	}
+	function initEdgesAll (nV) {
+		arrayEdges = [];
+		for (let i = 0; i < nV; i++) {
+			for (let j = 0; j < nV; j++) {
+				if (i === j) {continue;}
+				let edgeObject = {a: i, b: j, computedStrength: undefined};
+				arrayEdges.push(edgeObject);
+			}
+		}
+	}
+	function computeStrength () {
+		for (let i = 0; i < arrayEdges.length; i++) {
+			let aMass = arrayVertices[arrayEdges[i].a].mass;
+			let bMass = arrayVertices[arrayEdges[i].b].mass;
+			let ax = arrayVertices[arrayEdges[i].a].px;
+			let ay = arrayVertices[arrayEdges[i].a].py;
+			let bx = arrayVertices[arrayEdges[i].b].px;
+			let by = arrayVertices[arrayEdges[i].b].py;
+			let distance = Math.sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by));
+			let minimum = 0.1;
+			arrayEdges[i].computedStrength = (1 / (distance + minimum)) * aMass * bMass;
+		}
+	}
+	function computeAcceleration () {
+		let coeff = 0.000000035;
+		for (let i = 0; i < arrayEdges.length; i++) {
+			let aMass = arrayVertices[arrayEdges[i].a].mass;
+			let bMass = arrayVertices[arrayEdges[i].b].mass;
+			let apx = arrayVertices[arrayEdges[i].a].px;
+			let apy = arrayVertices[arrayEdges[i].a].py;
+			let bpx = arrayVertices[arrayEdges[i].b].px;
+			let bpy = arrayVertices[arrayEdges[i].b].py;
+			let avx = arrayVertices[arrayEdges[i].a].vx;
+			let avy = arrayVertices[arrayEdges[i].a].vy;
+			let bvx = arrayVertices[arrayEdges[i].b].vx;
+			let bvy = arrayVertices[arrayEdges[i].b].vy;
+			let adx = bpx - apx > 0 ? 1 : -1;
+			let ady = bpy - apy > 0 ? 1 : -1;
+			let bdx = -adx;
+			let bdy = -ady;
+			let strength = arrayEdges[i].computedStrength;
+			arrayVertices[arrayEdges[i].a].vx += adx * strength * coeff / aMass;
+			arrayVertices[arrayEdges[i].a].vy += ady * strength * coeff / aMass;
+			arrayVertices[arrayEdges[i].b].vx += bdx * strength * coeff / bMass;
+			arrayVertices[arrayEdges[i].b].vy += bdy * strength * coeff / bMass;
+		}
+	}
+	function computePosition () {
+		for (let i = 0; i < arrayVertices.length; i++) {
+			arrayVertices[i].px += arrayVertices[i].vx;
+			arrayVertices[i].py += arrayVertices[i].vy;
+		}
+	}
+	function drawVertices () {
+		ctx.fillStyle = 'rgb(0,0,0)';
+		let len = arrayVertices.length;
+		for (let i = len - 1; i >= 0; i--) {
+			ctx.fillStyle = 'hsl(' + (180 + (290 - 180) * i / len) + ',100%,50%)';
+			ctx.beginPath();
+			ctx.arc(arrayVertices[i].px * width, arrayVertices[i].py * height, Math.pow(arrayVertices[i].mass, 0.3) * 3 * radiusCoefficient, 0, 2 * Math.PI, false);
+			ctx.fill();
+		}
+	}
+	let arrayNodes = [];
+	let coeffSpeedNodes = 0.005;
+	function initNodes (n) {
+		arrayNodes = [];
+		for (let i = 0; i < n; i++) {
+			let random = Math.random();
+			let objectNode = {
+				px: 0.5,
+				py: 0.5,
+				vx: random * coeffSpeedNodes * (Math.random() > 0.5 ? 1 : -1),
+				vy: (1 - random) * coeffSpeedNodes * (Math.random() > 0.5 ? 1 : -1),
+				size: 0.3 + Math.random() * 0.7
+			};
+			arrayNodes.push(objectNode);
+		}
+	}
+	function reflectNodes () {
+		let len = arrayNodes.length;
+		for (let i = 0; i < len; i++) {
+			if (arrayNodes[i].px < 0 || arrayNodes[i].px > 1 || arrayNodes[i].py < 0 || arrayNodes[i].py > 1) {
+				arrayNodes[i].px = 0.5;
+				arrayNodes[i].py = 0.5;
+				let random = Math.random();
+				arrayNodes[i].vx = random * coeffSpeedNodes * (Math.random() > 0.5 ? 1 : -1);
+				arrayNodes[i].vy = (1 - random) * coeffSpeedNodes * (Math.random() > 0.5 ? 1 : -1);
+				arrayNodes[i].size = 0.3 + Math.random() * 0.7;
+			}
+			arrayNodes[i].px += arrayNodes[i].vx;
+			arrayNodes[i].py += arrayNodes[i].vy;
+		}
+	}
+	function drawCanvas1 () {
+		gradient1.addColorStop(0, 'rgb(' + Math.floor(Math.random() * 120) + ',0,' + Math.floor(Math.random() * 200)+ ')');
+		gradient1.addColorStop(1, 'rgb(0,0,0)');
+		ctx1.fillStyle = gradient1;
+		ctx1.fillRect(0, 0, width1, height1);
+		ctx1.fillStyle = 'rgba(255,255,255,1)';
+		let len = arrayNodes.length;
+		for (let i = 0; i < len; i++) {
+			ctx1.beginPath();
+			ctx1.arc(arrayNodes[i].px * width1, arrayNodes[i].py * height1, arrayNodes[i].size * 2 * radiusCoefficient, 0, 2 * Math.PI, false);
+			ctx1.fill();
+		}
+		reflectNodes();
+	}
+	let animationFrame;
+	let frame = 0;
+	function drawAnimation () {
+		frame++;
+		if (frame > 20000) {
+			frame = 0;
+			restart();
+			return;
+		}
+		drawCanvas1();
+		ctx.save();
+		ctx.globalAlpha = 0.1;
+		ctx.drawImage(canvas1, 0, 0, width, height);
+		ctx.restore();
+		drawVertices();
+		computeStrength();
+		computeAcceleration();
+		computePosition();
+		animationFrame = requestAnimationFrame(drawAnimation);
+	}
+	let nVertices = 80;
+	let nNodes = 20;
+	function restart () {
+		frame = 0;
+		ctx.fillStyle = 'rgba(0,0,0,1)';
+		ctx.fillRect(0, 0, width, height);
+		if (animationFrame) {
+			cancelAnimationFrame(animationFrame);
+		}
+		initVertices(nVertices);
+		initEdgesAll(nVertices);
+		initNodes(nNodes);
+		drawAnimation();
+	}
+	canvas.onclick = ()=>{
+		restart();
+	};
+	restart();
+})();
+</script>
+</body>
+</html>
