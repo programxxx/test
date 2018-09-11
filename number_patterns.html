@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+NUMBER PATTERN
+</title>
+</head>
+<body style='background-color: rgb(0,0,0);'>
+<script type="text/javascript">
+;(() => {
+	'use strict';
+	const createPrintf = ((div, stringOut) => {
+		return functionName => {
+			const out = string => {
+				stringOut += string;
+			};
+			out[functionName] = (pre => {
+				return () => {
+					div.style.textAlign = 'left';
+					pre.textContent = stringOut;
+					div.appendChild(pre);
+					document.body.appendChild(div);
+				};
+			})(document.createElement('pre'));
+			return out;
+		};
+	})(document.createElement('div'), '');
+	((n, base, start, printf) => {
+		for (let i = 0; i < n; i++) {
+			for (let j = 0; j < 2 * (n - 1 - i); j++) {
+				printf(' ');
+			}
+			for (let j = 0; j < 2 * i + 1; j++) {
+				if (j < i + 1) {
+					printf(((j + start) % base).toString(base))
+				} else {
+					printf(((2 * i - j + start) % base).toString(base))
+				}
+				if (j < 2 * i) {
+					printf(' ')
+				}
+			}
+			printf('\n');
+		}
+		printf.printOnScreen();
+	})(16, 10, 1, createPrintf('printOnScreen'));
+})();
+</script>
+</body>
+</html>
