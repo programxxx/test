@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Matrix
+</title>
+</head>
+<body>
+<script>
+;(() => {
+	'use strict';
+	const printMatrix = (() => {
+		let memory = '';
+		const sizeCoeff = 4.0;
+		const divOut = document.createElement('div');
+		const divMatrix = document.createElement('div');
+		const buttonRefresh = document.createElement('button');
+		const buttonSave = document.createElement('button');
+		const buttonRecall = document.createElement('button');
+		buttonRefresh.textContent = 'Refresh';
+		buttonSave.textContent = 'Save';
+		buttonRecall.textContent = 'Recall';
+		buttonRefresh.style.fontSize = buttonSave.style.fontSize = buttonRecall.style.fontSize = (sizeCoeff / 7 * 10) + 'vmin';
+		divOut.style.fontSize = (sizeCoeff / 7 * 10) + 'vmin';
+		divOut.appendChild(buttonRefresh);
+		divOut.appendChild(document.createElement('br'));
+		divOut.appendChild(document.createElement('br'));
+		divOut.appendChild(divMatrix);
+		divOut.appendChild(document.createElement('br'));
+		divOut.appendChild(buttonSave);
+		const span = document.createElement('span');
+		span.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		divOut.appendChild(span);
+		divOut.appendChild(buttonRecall);
+		divOut.appendChild(document.createElement('br'));
+		divOut.appendChild(document.createElement('br'));
+		divOut.style.textAlign = 'center';
+		document.body.appendChild(divOut);
+		const refresh = matrix => {
+			memory = JSON.stringify(matrix);
+			const nRowsCols = matrix.length;
+			divMatrix.style.textAlign = 'center';
+			divMatrix.innerHTML = '';
+			const table = document.createElement('table');
+			table.style.fontSize = (sizeCoeff / nRowsCols * 10) + 'vmin';
+			table.style.textAlign = 'center';
+			table.style.marginLeft = table.style.marginRight = 'auto';
+			table.style.borderCollapse = 'collapse';
+			for (let i = 0, imax = matrix.length; i < imax; i++) {
+				const tr = document.createElement('tr');
+				for (let j = 0, jmax = matrix[i].length; j < jmax; j++) {
+					const td = document.createElement('td');
+					td.style.width = td.style.height = (sizeCoeff / nRowsCols * 14) + 'vmin';
+					td.textContent = matrix[i][j].toString(10);
+					td.style.border = '0.5vmin solid black';
+					tr.appendChild(td);
+				}
+				table.appendChild(tr);
+			}
+			divMatrix.appendChild(table);
+		};
+		const save = () => {
+			console.log('save');
+			localStorage['Matrix_meditation'] = memory;
+			return true;
+		};
+		const recall = () => {
+			console.log('recall');
+			memory = localStorage['Matrix_meditation'];
+			return JSON.parse(memory);
+		};
+		return {refresh, buttonRefresh, save, buttonSave, recall, buttonRecall};
+	})();
+	const createMatrix = n => {
+		const rnd = () => {
+			return Math.round(Math.random() * 1e6) % 9 + 1;
+		};
+		const matrix = [];
+		for (let i = 0; i < n; i++) {
+			const arr = [];
+			for (let j = 0; j < n; j++) {
+				arr.push(0);
+			}
+			matrix.push(arr);
+		}
+		let date = new Date().getTime();
+		date = date % 123;
+		let countDummy = 0;
+		while (Math.round(Math.random() * 123) !== date) {
+			countDummy++;
+		}
+		console.log(countDummy);
+		const arrDigits = new Array(10).fill(0);
+		const checkMatrix = () => {
+			console.log('check matrix');
+			for (let i = 0, imax = matrix.length; i < imax; i++) {
+				for (let j = 0, jmax = matrix[i].length; j < jmax; j++) {
+					arrDigits[matrix[i][j]]++;
+				}
+			}
+			for (let i = 1; i < 10; i++) {
+				if (arrDigits[i] === 0) {
+					return false;
+				}
+			}
+			return true;
+		};
+		const fillMatrix = () => {
+			matrix[0][0] = rnd();
+			for (let j = 1; j < n; j++) {
+				let a = rnd();
+				while (a === matrix[0][j - 1]) {
+					a = rnd();
+				}
+				matrix[0][j] = a;
+			}
+			for (let i = 1; i < n; i++) {
+				let a = rnd();
+				while (a === matrix[i - 1][0]) {
+					a = rnd();
+				}
+				matrix[i][0] = a;
+			}
+			for (let i = 1; i < n; i++) {
+				for (let j = 1; j < n; j++) {
+					let a = rnd();
+					while (a === matrix[i - 1][j] || a === matrix[i][j - 1]) {
+						a = rnd();
+					}
+					matrix[i][j] = a;
+				}
+			}
+		};
+		do {
+			fillMatrix();
+		} while (!checkMatrix());
+		return matrix;
+	};
+	const refresh = () => {
+		printMatrix.refresh(createMatrix(4));
+	};
+	const recall = () => {
+		printMatrix.refresh(printMatrix.recall());
+	};
+	printMatrix.buttonRefresh.onclick = refresh;
+	printMatrix.buttonSave.onclick = printMatrix.save;
+	printMatrix.buttonRecall.onclick = recall;
+	refresh();
+})();
+</script>
+</body>
+</html>
