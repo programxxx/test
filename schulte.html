@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Schulte
+</title>
+</head>
+<body>
+<script>
+;(function() {
+	var sizeCoeff = 6.0;
+	function initMatrix(n) {
+		var arr = [];
+		for (var i = 0, imax = n * n; i < imax; i++) {
+			arr.push(i + 1);
+		}
+		var timeArray = new Date().getTime().toString().substr(6).split('');
+		for (var k = 0; k < 5; k++) {
+			for (var i = 0, imax = timeArray.length, mod = arr.length; i < imax; i++) {
+				var index = timeArray[i] % mod;
+				var temp = arr[i];
+				arr[i] = arr[index];
+				arr[index] = temp;
+			}
+			for (var i = 0, imax = arr.length; i < imax; i++) {
+				var index = Math.floor(Math.random() * imax);
+				var temp = arr[i];
+				arr[i] = arr[index];
+				arr[index] = temp;
+			}
+		}
+		var k = 0;
+		var matrix = [];
+		for (var i = 0; i < n; i++) {
+			var row = [];
+			for (var j = 0; j < n; j++) {
+				row.push(arr[k]);
+				k++;
+			}
+			matrix.push(row);
+		}
+		return matrix;
+	}
+	function createTable(matrix) {
+		var nRowsCols = matrix.length;
+		var table = document.createElement("table");
+		for (var i = 0, imax = matrix.length; i < imax; i++) {
+			var tr = document.createElement("tr");
+			for (var j = 0, jmax = imax; j < jmax; j++) {
+				var td = document.createElement("td");
+				td.textContent = matrix[i][j];
+				td.style.border = "0.5vmin solid black";
+				td.style.width = td.style.height = (sizeCoeff / nRowsCols * 14) + "vmin";
+				tr.appendChild(td);
+			}
+			table.appendChild(tr);
+		}
+		table.style.borderCollapse = "collapse";
+		table.style.textAlign = "center";
+		table.style.marginLeft = table.style.marginRight = "auto";
+		table.style.fontSize = (sizeCoeff / nRowsCols * 10) + "vmin";
+		return table;
+	}
+	var div = document.createElement("div");
+	div.style.textAlign = "center";
+	var form = document.createElement("form");
+	var text = document.createElement("input");
+	text.type = "text";
+	text.value = 6;
+	text.style.textAlign = "center";
+	text.style.width = (sizeCoeff / 10 * 10 * 3) + "vmin";
+	form.appendChild(text);
+	var submit = document.createElement("input");
+	submit.type = "submit";
+	submit.value = "New sexy Schulte table?:)";
+	submit.style.fontSize = text.style.fontSize = (0.66 * sizeCoeff / 10 * 10) + "vmin";
+	form.appendChild(submit);
+	div.appendChild(form);
+	var divInner = document.createElement("div");
+	divInner.style.marginTop = sizeCoeff / 2 + "vmin";
+	div.appendChild(divInner);
+	form.addEventListener("submit", function(e) {
+		e.preventDefault();
+		var n = parseInt(text.value);
+		if (!n || n < 0) {
+			n = 1;
+		}
+		var oldTable = divInner.getElementsByTagName("table")[0];
+		if (oldTable) {
+			oldTable.parentElement.removeChild(oldTable);
+		}
+		var newMatrix = initMatrix(n);
+		var newTable = createTable(newMatrix);
+		divInner.appendChild(newTable);
+	}, false);
+	document.body.appendChild(div);
+	submit.click();
+})();
+</script>
+</body>
+</html>
