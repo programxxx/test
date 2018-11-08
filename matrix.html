@@ -92,14 +92,14 @@ Matrix
 		console.log(countDummy);
 		const arrDigits = new Array(10).fill(0);
 		const checkMatrix = () => {
-			console.log('check matrix new');
+			console.log('check matrix new new');
 			for (let i = 0, imax = matrix.length; i < imax; i++) {
 				for (let j = 0, jmax = matrix[i].length; j < jmax; j++) {
 					arrDigits[matrix[i][j]]++;
 				}
 			}
 			for (let i = 1; i < 10; i++) {
-				if (arrDigits[i] === 0) {
+				if (arrDigits[i] === 0 || arrDigits[i] > 2) {
 					arrDigits.fill(0);
 					return false;
 				}
