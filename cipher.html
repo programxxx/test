@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blak Vortex Cipher
+</title>
+</head>
+<body>
+<script>
+;(function () {
+	(function initializeDOM () {
+		document.body.style.backgroundColor = 'rgb(200, 200, 200)';
+		let div = document.createElement('div');
+		div.style.textAlign = 'center';
+		div.style.backgroundColor = 'rgb(200, 200, 200)';
+		div.style.display = 'block';
+		div.style.listStyleType = 'none';
+		let h1 = document.createElement('h1');
+		h1.appendChild(document.createTextNode('Blak Vortex Cipher'));
+		div.appendChild(h1);
+		let divTextarea1 = document.createElement('div');
+		divTextarea1.style.backgroundColor = 'rgb(100, 150, 200)';
+		divTextarea1.style.listStyleType = 'none';
+		let pTextarea1 = document.createElement('p');
+		pTextarea1.appendChild(document.createTextNode('Plaintext'));
+		divTextarea1.appendChild(pTextarea1);
+		let textarea1 = document.createElement('textarea');
+		divTextarea1.appendChild(textarea1);
+		div.appendChild(divTextarea1);
+		let divButton1 = document.createElement('div');
+		divButton1.style.backgroundColor = 'rgb(200, 200, 255)';
+		divButton1.style.listStyleType = 'none';
+		let pButton1 = document.createElement('p');
+		pButton1.appendChild(document.createTextNode('enter key & encrypt'));
+		divButton1.appendChild(pButton1);
+		let divButtonInner1 = document.createElement('div');
+		divButton1.appendChild(divButtonInner1);
+		let keyTextarea1 = document.createElement('textarea');
+		keyTextarea1.style.backgroundColor = 'rgb(255, 200, 255)';
+		divButtonInner1.appendChild(keyTextarea1);
+		let button1 = document.createElement('button');
+		button1.textContent = 'Encrypt';
+		divButton1.appendChild(button1);
+		div.appendChild(divButton1);
+		let divTextarea2 = document.createElement('div');
+		divTextarea2.style.backgroundColor = 'rgb(200, 100, 150)';
+		let pTextarea2 = document.createElement('p');
+		pTextarea2.appendChild(document.createTextNode('Ciphertext'));
+		divTextarea2.appendChild(pTextarea2);
+		let textarea2 = document.createElement('textarea');
+		divTextarea2.appendChild(textarea2);
+		div.appendChild(divTextarea2);
+		let divButton2 = document.createElement('div');
+		divButton2.style.backgroundColor = 'rgb(255, 200, 200)';
+		let pButton2 = document.createElement('p');
+		pButton2.appendChild(document.createTextNode('enter key & decrypt'));
+		divButton2.appendChild(pButton2);
+		let divButtonInner2 = document.createElement('div');
+		divButton2.appendChild(divButtonInner2);
+		let keyTextarea2 = document.createElement('textarea');
+		keyTextarea2.style.backgroundColor = 'rgb(255, 200, 255)';
+		divButtonInner2.appendChild(keyTextarea2);
+		let button2 = document.createElement('button');
+		button2.textContent = 'Decrypt';
+		divButton2.appendChild(button2);
+		div.appendChild(divButton2);
+		let divTextarea3 = document.createElement('div');
+		divTextarea3.style.backgroundColor = 'rgb(150, 200, 100)';
+		let pTextarea3 = document.createElement('p');
+		pTextarea3.appendChild(document.createTextNode('Deciphered text'));
+		divTextarea3.appendChild(pTextarea3);
+		let textarea3 = document.createElement('textarea');
+		divTextarea3.appendChild(textarea3);
+		div.appendChild(divTextarea3);
+		document.body.appendChild(div);
+		textarea1.cols = textarea2.cols = textarea3.cols = '60';
+		textarea1.rows = textarea2.rows = textarea3.rows = '5';
+		keyTextarea1.rows = keyTextarea2.rows = '1';
+		keyTextarea1.cols = keyTextarea2.cols = '40';
+		var inputPlain = document.createElement("input");
+		inputPlain.type = "file";
+		inputPlain.multiple = 'multiple';
+		divTextarea1.appendChild(document.createElement('br'));
+		divTextarea1.appendChild(inputPlain);
+		var inputCipher = document.createElement("input");
+		inputCipher.type = "file";
+		inputCipher.multiple = 'multiple';
+		divTextarea2.appendChild(document.createElement('br'));
+		divTextarea2.appendChild(inputCipher);
+		divTextarea1.appendChild((function (p) {p.appendChild(document.createTextNode('.')); return p;})(document.createElement('p')));
+		divTextarea2.appendChild((function (p) {p.appendChild(document.createTextNode('.')); return p;})(document.createElement('p')));
+		divTextarea3.appendChild((function (p) {p.appendChild(document.createTextNode('.')); return p;})(document.createElement('p')));
+		button1.onclick = function () {
+			if (inputPlain.files && inputPlain.files.length > 0) {
+				enchipFile(inputPlain, keyTextarea1.value);
+			} else {
+				textarea2.value = enchip(textarea1.value, keyTextarea1.value);
+			}
+		}
+		button2.onclick = function () {
+			if (inputCipher.files && inputCipher.files.length > 0) {
+				dechipFile(inputCipher, keyTextarea2.value);
+			} else {
+				textarea3.value = dechip(textarea2.value, keyTextarea2.value);
+			}
+		}
+	})();
+	function circShiftSimple (uArr) {
+		let temp = uArr[0];
+		let len = uArr.length;
+		for (let i = 1; i < len; i++) {
+			uArr[i - 1] = uArr[i];
+		}
+		len -= 1;
+		uArr[len] = temp + uArr[len];
+		return uArr[len];
+	}
+	function circShiftSub (uArr, subArr) {
+		let temp = uArr[0];
+		let len = uArr.length;
+		for (let i = 1; i < len; i++) {
+			uArr[i - 1] = uArr[i];
+		}
+		len -= 1;
+		uArr[len] = subArr[(temp + uArr[len]) % 256];
+		return uArr[len];
+	}
+	function convertStrToBuf (str) {
+		let buffer = new ArrayBuffer(2 * str.length);
+		let uint16Array = new Uint16Array(buffer);
+		for (let i = 0, imax = str.length; i < imax; i++) {
+			uint16Array[i] = str.charCodeAt(i);
+		}
+		return buffer;
+	}
+	function convertStrToBufKeys (str) {
+		let buffer = new ArrayBuffer(2 * str.length);
+		let uint16Array = new Uint16Array(buffer);
+		for (let i = 0, imax = str.length; i < imax; i++) {
+			uint16Array[i] = str.charCodeAt(i);
+		}
+		let uint8Array = new Uint8Array(buffer);
+		let zeroes = 0;
+		for (let i = 0, imax = uint8Array.length; i < imax; i++) {
+			if (uint8Array[i] === 0) {
+				zeroes += 1;
+				uint8Array[i] = zeroes;
+			}
+		}
+		return buffer;
+	}
+	function makeSimpleSequence (str) {
+		let buffer = convertStrToBufKeys(str);
+		let uint8Array = new Uint8Array(buffer);
+		return function () {
+			return circShiftSimple(uint8Array);
+		}
+	}
+	function makeSubstitutionSequence (strSeq, strSub, strSubSeq) {
+		return (function (subArray, innerSequence, shuffleIterations, uint8Array) {
+			for (let i = 0; i < 256; i++) {
+				subArray.push(i);
+			}
+			for (let i = 0; i < shuffleIterations; i++) {
+				let index1 = innerSequence();
+				let index2 = innerSequence();
+				let temp = subArray[index1];
+				subArray[index1] = subArray[index2];
+				subArray[index2] = temp;
+			}
+			return function () {
+				return circShiftSub(uint8Array, subArray);
+			}
+		})([], strSubSeq ? makeSubstitutionSequence(strSub, strSubSeq) : makeSimpleSequence(strSub), 1000, new Uint8Array(convertStrToBufKeys(strSeq)));
+	}
+	function makeSubstitutionFilterArray (key1, key2, key3) {
+		return (function (array, seq, shuffleIterations) {
+			for (let i = 0; i < 256; i++) {
+				array.push(i);
+			}
+			for (let i = 0; i < shuffleIterations; i++) {
+				let index1 = seq();
+				let index2 = seq();
+				let temp = array[index1];
+				array[index1] = array[index2];
+				array[index2] = temp;
+			}
+			return array;
+		})([], makeSubstitutionSequence(key1, key2, key3), 1000);
+	}
+	function makeFinalSequence (key, salt1, salt2) {
+		let seq = makeSubstitutionSequence(key.substring(0, 5), key + salt1 + key, key + salt2);
+		let arrayFilter = makeSubstitutionFilterArray(key, key.substring(0, 5) + salt1, key + salt1 + salt2);
+		let sumSequence = 0;
+		let sumOutput = 0;
+		return function () {
+			sumSequence = (sumSequence + seq()) % 256;
+			sumOutput = (sumOutput + arrayFilter[sumSequence]) % 256;
+			return sumOutput;
+		}
+	}
+	function smashData (uint8Array) {
+		let len = uint8Array.length;
+		for (let i = 1; i < len; i++) {
+			uint8Array[i] += uint8Array[i - 1];
+		}
+		for (let i = len - 2; i >= 0; i--) {
+			uint8Array[i] += uint8Array[i + 1];
+		}
+		for (let i = 1; i < len; i++) {
+			uint8Array[i] += uint8Array[i - 1];
+		}
+	}
+	function unsmashData (uint8Array) {
+		let len = uint8Array.length;
+		for (let i = len - 1; i > 0; i--) {
+			if (uint8Array[i] >= uint8Array[i - 1]) {
+				uint8Array[i] = uint8Array[i] - uint8Array[i - 1];
+			} else {
+				uint8Array[i] = uint8Array[i] + 256 - uint8Array[i - 1];
+			}
+		}
+		for (let i = 0; i < len - 1; i++) {
+			if (uint8Array[i] >= uint8Array[i + 1]) {
+				uint8Array[i] = uint8Array[i] - uint8Array[i + 1];
+			} else {
+				uint8Array[i] = uint8Array[i] + 256 - uint8Array[i + 1];
+			}
+		}
+		for (let i = len - 1; i > 0; i--) {
+			if (uint8Array[i] >= uint8Array[i - 1]) {
+				uint8Array[i] = uint8Array[i] - uint8Array[i - 1];
+			} else {
+				uint8Array[i] = uint8Array[i] + 256 - uint8Array[i - 1];
+			}
+		}
+	}
+	function substitutionData (uint8Array, arraySub) {
+		let len = uint8Array.length;
+		for (let i = 0; i < len; i++) {
+			uint8Array[i] = arraySub[uint8Array[i]];
+		}
+	}
+	function substitutionInverseData (uint8Array, arraySub) {
+		let len = uint8Array.length;
+		let arraySubInverse = [];
+		for (let i = 0; i < 256; i++) {
+			arraySubInverse.push(i);
+		}
+		for (let i = 0; i < 256; i++) {
+			arraySubInverse[arraySub[i]] = i;
+		}
+		for (let i = 0; i < len; i++) {
+			uint8Array[i] = arraySubInverse[uint8Array[i]];
+		}
+	}
+	function enchip (str, key) {
+		let buffer = convertStrToBuf(str);
+		let uint8Array = new Uint8Array(buffer);
+		let uniqueSalt1 = (Math.floor(Math.random() * 1e12)).toString().substring(0, 1) + (new Date().getTime()).toString().substring(9, 13);
+		let uniqueSalt2 = Math.floor(Math.random() * 1e12).toString().substring(0, 5);
+		let seq = makeFinalSequence(key, uniqueSalt1, uniqueSalt2);
+		for (let i = 0; i < 333; i++) {
+			seq();
+		}
+		for (let i = 0, imax = uint8Array.length; i < imax; i++) {
+			uint8Array[i] = uint8Array[i] ^ seq();
+		}
+		for (let i = 0; i < 6; i++) {
+			let arraySub = makeSubstitutionFilterArray(key + i, key  + i + uniqueSalt2, key  + i + uniqueSalt1);
+			substitutionData(uint8Array, arraySub);
+			if (i % 2 === 0) {
+				smashData(uint8Array);
+			} else {
+				unsmashData(uint8Array);
+			}
+		}
+		substitutionData(uint8Array, makeSubstitutionFilterArray(key + 'extra', key + 'extra', key + 'extra'));
+		return uniqueSalt1 + ',' + uniqueSalt2 + ',' + (new Uint16Array(buffer).toString());
+	}
+	function enchipFile (input, key) {
+		for (let k = 0, kmax = input.files.length; k < kmax; k++) {
+			let fileName = input.files[k].name;
+			let frInput = new FileReader();
+			frInput.addEventListener("load", function() {
+				let resultBuffer = this.result;
+				let uint8Array = new Uint8Array(resultBuffer);
+				let uniqueSalt1 = (Math.floor(Math.random() * 1e12)).toString().substring(0, 1) + (new Date().getTime()).toString().substring(9, 13);
+				let uniqueSalt2 = Math.floor(Math.random() * 1e12).toString().substring(0, 5);
+				let seq = makeFinalSequence(key, uniqueSalt1, uniqueSalt2);
+				for (let i = 0; i < 333; i++) {
+					seq();
+				}
+				for (let i = 0, imax = uint8Array.length; i < imax; i++) {
+					uint8Array[i] = uint8Array[i] ^ seq();
+				}
+				for (let i = 0; i < 6; i++) {
+					let arraySub = makeSubstitutionFilterArray(key + i, key  + i + uniqueSalt2, key  + i + uniqueSalt1)
+					substitutionData(uint8Array, arraySub);
+					if (i % 2 === 0) {
+						smashData(uint8Array);
+					} else {
+						unsmashData(uint8Array);
+					}
+				}
+				substitutionData(uint8Array, makeSubstitutionFilterArray(key + 'extra', key + 'extra', key + 'extra'));
+				let blobDataOutput = new Blob([uint8Array], {type: "application/octet-stream"});
+				let fileURL = URL.createObjectURL(blobDataOutput);
+				let a = document.createElement("a");
+				a.href = fileURL;
+				let fileNameArray = fileName.split('.');
+				a.download = fileNameArray.slice(0, fileNameArray.length - 1).join('.') + '_ENCRYPTED_' + uniqueSalt1 + '_' + uniqueSalt2 + '.' + fileNameArray[fileNameArray.length - 1] + '.' + 'txt';
+				a.click();
+				setTimeout(function() {
+					URL.revokeObjectURL(fileURL);
+				}, 1000);
+			}, false);
+			frInput.readAsArrayBuffer(input.files[k]);
+		}
+	}
+	function dechip (string, key) {
+		let array = string.split(',');
+		string = undefined;
+		let uniqueSalt1 = array[0].toString();
+		let uniqueSalt2 = array[1].toString();
+		let buffer = new ArrayBuffer(2 * (array.length - 2));
+		let uint16Array = new Uint16Array(buffer);
+		for (let i = 0, imax = array.length - 2; i < imax; i++) {
+			uint16Array[i] = array[i + 2];
+		}
+		array = undefined;
+		let uint8Array = new Uint8Array(buffer);
+		substitutionInverseData(uint8Array, makeSubstitutionFilterArray(key + 'extra', key + 'extra', key + 'extra'));
+		for (let i = 6 - 1; i >= 0; i--) {
+			let arraySub = makeSubstitutionFilterArray(key + i, key  + i + uniqueSalt2, key  + i + uniqueSalt1);
+			if (i % 2 === 0) {
+				unsmashData(uint8Array);
+			} else {
+				smashData(uint8Array);
+			}
+			substitutionInverseData(uint8Array, arraySub);
+		}
+		let seq = makeFinalSequence(key, uniqueSalt1, uniqueSalt2);
+		for (let i = 0; i < 333; i++) {
+			seq();
+		}
+		for (let i = 0, imax = uint8Array.length; i < imax; i++) {
+			uint8Array[i] = uint8Array[i] ^ seq();
+		}
+		return String.fromCharCode.apply(null, uint16Array);
+	}
+	function dechipFile (input, key) {
+		for (let k = 0, kmax = input.files.length; k < kmax; k++) {
+			let fileName = input.files[k].name;
+			let frInput = new FileReader();
+			frInput.addEventListener("load", function() {
+				let resultBuffer = this.result;
+				let uint8Array = new Uint8Array(resultBuffer);
+				let fileNameArray = fileName.split('.');
+				fileNameArray = fileNameArray.slice(0, fileNameArray.length - 1);
+				let fileBaseNameArray = fileNameArray.slice(0, fileNameArray.length - 1).join('.').split('_');
+				let uniqueSalt1 = fileBaseNameArray[fileBaseNameArray.length - 2];
+				let uniqueSalt2 = fileBaseNameArray[fileBaseNameArray.length - 1].substring(0, 5);
+				substitutionInverseData(uint8Array, makeSubstitutionFilterArray(key + 'extra', key + 'extra', key + 'extra'));
+				for (let i = 6 - 1; i >= 0; i--) {
+					let arraySub = makeSubstitutionFilterArray(key + i, key  + i + uniqueSalt2, key  + i + uniqueSalt1);
+					if (i % 2 === 0) {
+						unsmashData(uint8Array);
+					} else {
+						smashData(uint8Array);
+					}
+					substitutionInverseData(uint8Array, arraySub);
+				}
+				let seq = makeFinalSequence(key, uniqueSalt1, uniqueSalt2);
+				for (let i = 0; i < 333; i++) {
+					seq();
+				}
+				for (let i = 0, imax = uint8Array.length; i < imax; i++) {
+					uint8Array[i] = uint8Array[i] ^ seq();
+				}
+				let blobDataOutput = new Blob([uint8Array], {type: "application/octet-stream"});
+				let fileURL = URL.createObjectURL(blobDataOutput);
+				let a = document.createElement("a");
+				a.href = fileURL;
+				a.download = fileBaseNameArray.slice(0, fileBaseNameArray.length - 3).join('_') + '.' + fileNameArray[fileNameArray.length - 1];
+				a.click();
+				setTimeout(function() {
+					URL.revokeObjectURL(fileURL);
+				}, 1000);
+			}, false);
+			frInput.readAsArrayBuffer(input.files[k]);
+		}
+	}
+})();
+</script>
+</body>
+</html>
