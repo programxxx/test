@@ -93,7 +93,7 @@ ATOM CORE
 			frame = 0;
 		}
 	};
-	const onmousemove = e => {
+	/*const onmousemove = e => {
 		if (!mouseState) { return; }
 		const rect = canvas.getBoundingClientRect();
 		x = e.clientX - rect.left;
@@ -107,7 +107,7 @@ ATOM CORE
 		drawPoints(x, y, cx, cy);
 	};
 	canvas.onmousemove = onmousemove;
-	canvas.onclick = onclick;
+	canvas.onclick = onclick;*/
 	canvas.onclick = onresize;
 	const randomWalk = () => {
 		let a = 1;
