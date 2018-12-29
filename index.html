@@ -33,7 +33,7 @@ FRACTAL SNOWFLAKE
 		mx = cx;
 		my = cy;
 		xyStep = Math.min(width, height) / 20;
-		hue = 0;
+		hue = (Math.random() * 1000000) % 360;
 	};
 	onresize();
 	document.body.appendChild(canvas);
