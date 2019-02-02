@@ -74,6 +74,7 @@ Matrix
 		return {refresh, buttonRefresh, save, buttonSave, recall, buttonRecall};
 	})();
 	const createMatrix = () => {
+		for (let i = 0, imax = new Date().getTime() % 1000, dummy = Math.random(); i < imax; i++) { dummy += Math.random(); }
 		const arrMatrix = new Array(16).fill(0).map((x, i) => {return i;});
 		for (let i = 0; i < 5; i++) { arrMatrix.sort(() => {return Math.random() - 0.5;}); }
 		const matrix = [];
