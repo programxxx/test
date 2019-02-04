@@ -89,7 +89,12 @@ Matrix
 		while (Math.round(Math.random() * 123) !== date) {
 			countDummy++;
 		}
-		console.log(countDummy);
+		console.log(`countDummy ${countDummy}`);
+		if (!localStorage['Matrix_meditation_previous_time']) { localStorage['Matrix_meditation_previous_time'] = new Date().getTime(); }
+		let dummy2 = new Date().getTime() - localStorage['Matrix_meditation_previous_time'];
+		dummy2 = dummy2 % 100;
+		for (let i = 0, dummy3 = 0; i < dummy2; i++) { dummy3 += Math.random(); }
+		console.log(`dummy2 ${dummy2}`);
 		const arrDigits = new Array(10).fill(0);
 		const checkMatrix = () => {
 			console.log('check matrix new new');
