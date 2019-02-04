@@ -38,6 +38,7 @@ Matrix
 		document.body.appendChild(divOut);
 		const refresh = matrix => {
 			memory = JSON.stringify(matrix);
+			if (!localStorage['Matrix_meditation']) { localStorage['Matrix_meditation'] = memory; }
 			const nRowsCols = matrix.length;
 			divMatrix.style.textAlign = 'center';
 			divMatrix.innerHTML = '';
