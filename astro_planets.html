@@ -133,10 +133,11 @@ Astro Planets
 		animate();
 	};
 	const onresize1 = () => {		
-		onresize(Math.max(window.innerWidth, window.innerHeight), Math.max(window.innerWidth, window.innerHeight));
+		//onresize(Math.max(window.innerWidth, window.innerHeight), Math.max(window.innerWidth, window.innerHeight));
+		onresize(Math.min(window.innerWidth, window.innerHeight), Math.min(window.innerWidth, window.innerHeight));
 	};
 	window.addEventListener('resize', onresize1);
-	canvas.addEventListener('click', () => {console.log('click'); onresize1();});
+	//canvas.addEventListener('click', () => {console.log('click'); onresize1();});
 	document.body.appendChild(canvas);
 	onresize1();
 })();
