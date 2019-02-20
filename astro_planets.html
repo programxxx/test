@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Astro Planets
+</title>
+</head>
+<body>
+<script>
+;(() => {
+	'use strict';
+	const canvas = document.createElement('canvas');
+	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
+		{name: 'planetA', color: Math.random() * 360, size: 0.03, distance: 0.2, angle: 0, speed: 0.003, selfAngle: 0, selfSpeed: 0.03, satelites: [
+			{name: 'moonA1', color: Math.random() * 360, size: 0.01, distance: 0.05, angle: 0, speed: 0.01, selfAngle: 0, selfSpeed: 0.04,  satelites: [
+				{name: 'moonA1a', color: Math.random() * 360, size: 0.003, distance: 0.02, angle: 0, speed: 0.025, selfAngle: 0, selfSpeed: 0.05, satelites: []}
+			]},
+			{name: 'moonA2', color: Math.random() * 360, size: 0.01, distance: 0.09, angle: 0, speed: 0.005, selfAngle: 0, selfSpeed: 0.03, satelites: []}
+		]},
+		{name: 'planetB', color: Math.random() * 360, size: 0.02, distance: 0.3, angle: 0, speed: 0.001, selfAngle: 0, selfSpeed: 0.04, satelites: [
+			{name: 'moonA1', color: Math.random() * 360, size: 0.008, distance: 0.1, angle: 0, speed: 0.004, selfAngle: 0, selfSpeed: 0.05, satelites: []}
+		]}
+	]};*/
+	const generateSatelites = (depth, numberSatelitesMin, numberSatelitesMax, etalon, divisor) => {
+		const arr = [];
+		if (depth <= 0) { return arr; }
+		let distance = etalon;
+		for (let i = 0, imax = Math.round(numberSatelitesMin + Math.random() * (numberSatelitesMax - numberSatelitesMin)); i < imax; i++) {
+			const color = Math.random() * 360;
+			//const size = 0.5 * etalon * (sizeMin + Math.random() * (sizeMax - sizeMin)) / (i + 1);
+			const size = 0.8 * Math.pow(etalon, 0.9) / (i + 2)  * ((Math.random() - 0.5) * 0.15 + 1);
+			distance += 2 * etalon / imax * ((Math.random() - 0.5) * 0.25 + 1);
+			const angle = Math.random();
+			const speed = 0.0001 / (i + 2) / Math.pow(etalon, 1.05);
+			const selfAngle = Math.random();
+			const selfSpeed = ((Math.random() - 0.5) * 0.5 + 1) * 0.002 / (i + 1) / etalon;
+			const satelites = generateSatelites(depth - 1, numberSatelitesMin - 1, numberSatelitesMax - Math.random() * 1.5, etalon * divisor, divisor);
+			arr.push({color: color, size: size, distance: distance, angle: angle, speed: speed, selfAngle: selfAngle, selfSpeed: selfSpeed, satelites: satelites});
+		}
+		return arr;
+	};
+	const polarToDec = (cx, cy, distance, angle) => {
+		if (angle > 1) { angle = angle - Math.floor(angle); }
+		angle = 2 * Math.PI * angle;
+		const x = cx + distance * Math.cos(angle);
+		const y = cy + distance * Math.sin(angle);
+		return [x, y];
+	};
+	const run = (obj, x, y, drawFunction) => {
+		const [objX, objY] = polarToDec(x, y, obj.distance, obj.angle);
+		let shadowExcentrisity = 0.5;
+		if (obj.distance === 0) { shadowExcentrisity = 0.1; }
+		const [selfRotationX, selfRotationY] = polarToDec(objX, objY, obj.size * shadowExcentrisity, obj.selfAngle);
+		drawFunction(objX, objY, obj.size, x, y, obj.distance, selfRotationX, selfRotationY, obj.distance, obj.color);
+		if (obj.satelites && obj.satelites.length > 0) {
+			for (let i = 0, imax = obj.satelites.length; i < imax; i++) {
+				run(obj.satelites[i], objX, objY, drawFunction);
+			}
+		}
+		obj.angle += obj.speed;
+		obj.selfAngle += obj.selfSpeed;
+	};
+	const createDrawFunction = (ctx, width, height)  => {
+		const size = Math.min(width, height)
+		return (x, y, objectRadius, cx, cy, orbisRadius, selfRotationX, selfRotationY, distance, color) => {
+			const colorDark = 'hsl(' + color + ',50%,15%)';
+			const colorBright = 'hsl(' + color + ',100%,70%)';
+			ctx.beginPath();
+			ctx.arc(cx * width, cy * height, size * orbisRadius, 0, 2 * Math.PI, false);
+			ctx.stroke();
+			const center = 0.5;
+			distance = distance < 0.01 ? objectRadius : distance;
+			const distanceCoeff = objectRadius / distance;
+			let selfRotationDarkness = '0.5';
+			if (x === center && y === center) { 
+				const radialGradient1 = ctx.createRadialGradient(width * x, height * x, size * objectRadius * 0.5, width * x, height * y, size * objectRadius * 1.5);
+				radialGradient1.addColorStop(0.5, 'hsla(' + color + ',100%,50%,1)');
+				radialGradient1.addColorStop(1, 'hsla(' + color + ',100%,50%,0)');
+				ctx.fillStyle = radialGradient1;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius * 1.5, 0, 2 * Math.PI, false);
+				ctx.fill();
+				ctx.fillStyle = 'hsl(' + color + ',100%,50%)';
+				selfRotationDarkness = '0.4';
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				const radialGradient = ctx.createRadialGradient(width * selfRotationX, height * selfRotationY, size * objectRadius * 0.5, width * x, height * y, size * objectRadius);
+				radialGradient.addColorStop(0, 'rgba(255,0,0,' + selfRotationDarkness + ')');
+				radialGradient.addColorStop(1, 'rgba(255,0,0,0)');
+				ctx.fillStyle = radialGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+			} else {
+				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
+				linearGradient.addColorStop(0, colorDark);
+				linearGradient.addColorStop(distanceCoeff, colorBright);
+				ctx.fillStyle = linearGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				const radialGradient = ctx.createRadialGradient(width * selfRotationX, height * selfRotationY, size * objectRadius * 0.5, width * x, height * y, size * objectRadius);
+				radialGradient.addColorStop(0, 'rgba(0,0,0,' + selfRotationDarkness + ')');
+				radialGradient.addColorStop(1, 'rgba(0,0,0,0)');
+				ctx.fillStyle = radialGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+			}	
+		};
+	};
+	let animationFrame = undefined;
+	const onresize = (width, height) => {
+		canvas.width = width;
+		canvas.height = height;
+		const ctx = canvas.getContext('2d');
+		cancelAnimationFrame(animationFrame);
+		const drawFunction = createDrawFunction(ctx, width, height);
+		ctx.setLineDash([5, 15]);
+		ctx.strokeStyle = 'black';
+		const testObj1 = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
+			satelites: generateSatelites(3, 3, 3, 0.1, 0.35)
+		};
+		const animate = () => {
+			ctx.fillStyle = 'white';
+			ctx.fillRect(0, 0, width, height);
+			//ctx.clearRect(0, 0, width, height);
+			ctx.fillStyle = 'black';
+			run(testObj1, 0.5, 0.5, drawFunction);
+			animationFrame = requestAnimationFrame(animate);
+		};
+		animate();
+	};
+	const onresize1 = () => {		
+		onresize(Math.max(window.innerWidth, window.innerHeight), Math.max(window.innerWidth, window.innerHeight));
+	};
+	window.addEventListener('resize', onresize1);
+	canvas.addEventListener('click', () => {console.log('click'); onresize1();});
+	document.body.appendChild(canvas);
+	onresize1();
+})();
+</script>
+</body>
+</html>
