@@ -140,7 +140,7 @@ Astro Planets
 		const ctx = canvas.getContext('2d');
 		cancelAnimationFrame(animationFrame);
 		const drawFunction = createDrawFunction(ctx, width, height);
-		ctx.setLineDash([width / 300, width / 100]);
+		ctx.setLineDash([width / 300, width / 150]);
 		ctx.strokeStyle = 'black';
 		const testObj1 = {name: '_', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
 			satelites: generateSatelites('_', 3, 3, 3, 0.11, 0.35)
