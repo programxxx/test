@@ -9,8 +9,14 @@ Astro Planets
 <script>
 ;(() => {
 	'use strict';
-	//document.body.innerHTML = '';
+	document.body.innerHTML = '';
 	document.body.style.backgroundColor = 'black';
+	document.body.style.backgroundImage = 'url(https://adventure.com/wp-content/uploads/2017/12/Hero-GBI-Dark-Sky-Mark-Russell-7-1920x1080.jpg)';
+	document.body.style.backgroundSize = 'cover';
+	document.body.style.backgroundPosition = 'center';
+	document.body.style.backgroundRepeat = 'no-repeat';
+	document.body.style.textAlign = 'center';
+	//document.body.backgroundPosition = 'center center';
 	const canvas = document.createElement('canvas');
 	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
 		{name: 'planetA', color: Math.random() * 360, size: 0.03, distance: 0.2, angle: 0, speed: 0.003, selfAngle: 0, selfSpeed: 0.03, satelites: [
@@ -87,7 +93,7 @@ Astro Planets
 			let selfRotationDarkness = '0.5';
 			if (x === center && y === center) {
 				if (rowAllow > stringCount) {
-					ctx.fillStyle = 'green';
+					ctx.fillStyle = 'rgb(50,255,50)';
 					ctx.fillText(name + 'distance 0.0 angle 0.0 rotation ' + selfAngle.toString().substring(0,7), 0, 0);
 				}
 				const radialGradient1 = ctx.createRadialGradient(width * x, height * x, size * objectRadius * 0.5, width * x, height * y, size * objectRadius * 1.5);
@@ -111,7 +117,7 @@ Astro Planets
 				ctx.fill();
 			} else {
 				if (rowAllow > stringCount) {
-					ctx.fillStyle = 'green';
+					ctx.fillStyle = 'rgb(50,255,50)';
 					ctx.fillText(name +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), 0, stringCount * height * 0.015);
 				}
 				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
@@ -149,11 +155,11 @@ Astro Planets
 			const y0 = (0.5 + (Math.sin(0.07 * a0 * (position + start0)) + Math.cos(0.1 * a1 * (position + start0))) / 4) * height;
 			const y1 = (0.5 + (Math.sin(0.07 * b0 * (position + start1)) + Math.cos(0.1 * b1 * (position + start1))) / 4 + 0.3) * height * 0.7;
 			const y2 = (0.5 + (Math.sin(0.07 * c0 * (position + start2)) + Math.cos(0.1 * c1 * (position + start2))) / 4 + 0.6) * height * 0.4;
-			ctx.fillStyle = 'red';
+			ctx.fillStyle = 'rgb(255,0,0)';
 			ctx.fillRect(position, y0, width * 0.006, width * 0.006);
-			ctx.fillStyle = 'green';
+			ctx.fillStyle = 'rgb(50,255,50)';
 			ctx.fillRect(position, y1, width * 0.006, width * 0.006);
-			ctx.fillStyle = 'blue';
+			ctx.fillStyle = 'rgb(50,50,255)';
 			ctx.fillRect(position, y2, width * 0.006, width * 0.006);
 			position += 1;
 			if (position > width) { 
@@ -176,6 +182,7 @@ Astro Planets
 		const drawFunction = createDrawFunction(ctx, width, height);
 		ctx.setLineDash([width / 300, width / 150]);
 		ctx.strokeStyle = 'white';
+		ctx.lineWidth = 2;
 		const testObj1 = {name: '_', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
 			satelites: generateSatelites('_', 3, 3, 3, 0.11, 0.35)
 		};
@@ -186,10 +193,10 @@ Astro Planets
 		let frameRowAllow = 0, rowAllow = 0;
 		const frameStepRowAllow = 7, maxRowAllow = 100;
 		const animate = () => {
-			ctx.fillStyle = 'black';
+			//ctx.fillStyle = 'black';
 			//ctx.fillStyle = 'rgb(100,100,200)';
-			ctx.fillRect(0, 0, width, height);
-			//ctx.clearRect(0, 0, width, height);
+			//ctx.fillRect(0, 0, width, height);
+			ctx.clearRect(0, 0, width, height);
 			oscillatorDrawer();
 			ctx.drawImage(canvas1, width * 0.5, 0, canvas1.width, canvas1.height);
 			ctx.fillStyle = 'black';
