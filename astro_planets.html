@@ -143,8 +143,11 @@ Astro Planets
 			const y0 = (0.5 + (Math.sin(0.07 * a0 * (position + start0)) + Math.cos(0.1 * a1 * (position + start0))) / 4) * height;
 			const y1 = (0.5 + (Math.sin(0.07 * b0 * (position + start1)) + Math.cos(0.1 * b1 * (position + start1))) / 4 + 0.3) * height * 0.7;
 			const y2 = (0.5 + (Math.sin(0.07 * c0 * (position + start2)) + Math.cos(0.1 * c1 * (position + start2))) / 4 + 0.6) * height * 0.4;
+			ctx.fillStyle = 'red';
 			ctx.fillRect(position, y0, 1, 1);
+			ctx.fillStyle = 'green';
 			ctx.fillRect(position, y1, 1, 1);
+			ctx.fillStyle = 'blue';
 			ctx.fillRect(position, y2, 1, 1);
 			position += 1;
 			if (position > width) { 
@@ -157,7 +160,7 @@ Astro Planets
 	let animationFrame = undefined;
 	const onresize = (width, height) => {
 		const canvas1 = document.createElement('canvas');
-		canvas1.width = width;
+		canvas1.width = width / 2;
 		canvas1.height = height / 4;
 		const ctx1 = canvas1.getContext('2d');
 		canvas.width = width;
@@ -175,15 +178,15 @@ Astro Planets
 		ctx.textBaseline = 'top';
 		const graphicDrawer = createGraphicDrawer(ctx1, canvas1.width, canvas1.height);
 		const animate = () => {
-			//ctx.fillStyle = 'white';
+			ctx.fillStyle = 'white';
 			//ctx.fillStyle = 'rgb(100,100,200)';
-			//ctx.fillRect(0, 0, width, height);
-			ctx.clearRect(0, 0, width, height);
+			ctx.fillRect(0, 0, width, height);
+			//ctx.clearRect(0, 0, width, height);
+			graphicDrawer();
+			ctx.drawImage(canvas1, width * 0.5, 0, canvas1.width, canvas1.height);
 			ctx.fillStyle = 'black';
 			run(testObj1, 0.5, 0.5, drawFunction, 0);
 			//console.log(str);
-			graphicDrawer();
-			ctx.drawImage(canvas1, 0, height * 3 / 4, canvas1.width, canvas1.height);
 			animationFrame = requestAnimationFrame(animate);
 		};
 		animate();
