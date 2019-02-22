@@ -31,7 +31,7 @@ Astro Planets
 			//const size = 0.5 * etalon * (sizeMin + Math.random() * (sizeMax - sizeMin)) / (i + 1);
 			const size = 0.8 * Math.pow(etalon, 0.9) / (i + 2)  * ((Math.random() - 0.5) * 0.15 + 1);
 			distance += 2 * etalon / imax * ((Math.random() - 0.5) * 0.25 + 1);
-			const angle = Math.random();
+			const angle = i * (1 / imax) + Math.random() / imax;
 			const speed = 0.0001 / (i + 2) / Math.pow(etalon, 1.05);
 			const selfAngle = Math.random();
 			const selfSpeed = ((Math.random() - 0.5) * 0.5 + 1) * 0.002 / (i + 1) / Math.pow(etalon, 0.8);
