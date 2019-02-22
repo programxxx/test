@@ -133,8 +133,33 @@ Astro Planets
 			}	
 		};
 	};
+	const createGraphicDrawer = (ctx, width, height) => {
+		ctx.fillStyle = 'black';
+		let a0 = Math.random() * 0.5 + 0.5, a1 = Math.random() * 0.5 + 0.5, b0 = Math.random() * 0.5 + 0.5, b1 = Math.random() * 0.5 + 0.5, c0 = Math.random() * 0.5 + 0.5, c1 = Math.random() * 0.5 + 0.5;
+		let start0 = Math.random() * width, start1 = Math.random() * width, start2 = Math.random() * width; 
+		let position = 0;
+		return () => {
+			ctx.clearRect(position, 0, 5, height);
+			const y0 = (0.5 + (Math.sin(0.07 * a0 * (position + start0)) + Math.cos(0.1 * a1 * (position + start0))) / 4) * height;
+			const y1 = (0.5 + (Math.sin(0.07 * b0 * (position + start1)) + Math.cos(0.1 * b1 * (position + start1))) / 4 + 0.3) * height * 0.7;
+			const y2 = (0.5 + (Math.sin(0.07 * c0 * (position + start2)) + Math.cos(0.1 * c1 * (position + start2))) / 4 + 0.6) * height * 0.4;
+			ctx.fillRect(position, y0, 1, 1);
+			ctx.fillRect(position, y1, 1, 1);
+			ctx.fillRect(position, y2, 1, 1);
+			position += 1;
+			if (position > width) { 
+				position = 0;
+				a0 = Math.random() * 0.5 + 0.5, a1 = Math.random() * 0.5 + 0.5, b0 = Math.random() * 0.5 + 0.5, b1 = Math.random() * 0.5 + 0.5, c0 = Math.random() * 0.5 + 0.5, c1 = Math.random() * 0.5 + 0.5;
+				start0 = Math.random() * width, start1 = Math.random() * width, start2 = Math.random() * width;
+			}
+		};
+	};
 	let animationFrame = undefined;
 	const onresize = (width, height) => {
+		const canvas1 = document.createElement('canvas');
+		canvas1.width = width;
+		canvas1.height = height / 3;
+		const ctx1 = canvas1.getContext('2d');
 		canvas.width = width;
 		canvas.height = height;
 		const ctx = canvas.getContext('2d');
@@ -145,17 +170,20 @@ Astro Planets
 		const testObj1 = {name: '_', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
 			satelites: generateSatelites('_', 3, 3, 3, 0.11, 0.35)
 		};
-		ctx.font = 0.015 * height + 'px Arial';
+		ctx.font = (0.015 * height) + 'px Arial';
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
+		const graphicDrawer = createGraphicDrawer(ctx1, canvas1.width, canvas1.height);
 		const animate = () => {
-			ctx.fillStyle = 'white';
+			//ctx.fillStyle = 'white';
 			//ctx.fillStyle = 'rgb(100,100,200)';
-			ctx.fillRect(0, 0, width, height);
-			//ctx.clearRect(0, 0, width, height);
+			//ctx.fillRect(0, 0, width, height);
+			ctx.clearRect(0, 0, width, height);
 			ctx.fillStyle = 'black';
 			run(testObj1, 0.5, 0.5, drawFunction, 0);
 			//console.log(str);
+			graphicDrawer();
+			ctx.drawImage(canvas1, 0, height * 2 / 3, canvas1.width, canvas1.height);
 			animationFrame = requestAnimationFrame(animate);
 		};
 		animate();
