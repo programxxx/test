@@ -47,15 +47,15 @@ Astro Planets
 		const y = cy + distance * Math.sin(angle);
 		return [x, y];
 	};
-	const run = (obj, x, y, drawFunction, stringCount) => {
+	const run = (obj, x, y, drawFunction, stringCount, rowAllow) => {
 		const [objX, objY] = polarToDec(x, y, obj.distance, obj.angle);
 		let shadowExcentrisity = 0.5;
 		if (obj.distance === 0) { shadowExcentrisity = 0.1; }
 		const [selfRotationX, selfRotationY] = polarToDec(objX, objY, obj.size * shadowExcentrisity, obj.selfAngle);
-		drawFunction(objX, objY, obj.size, x, y, obj.distance, selfRotationX, selfRotationY, obj.distance, obj.color, obj.name, stringCount, obj.angle, obj.selfAngle);
+		drawFunction(objX, objY, obj.size, x, y, obj.distance, selfRotationX, selfRotationY, obj.distance, obj.color, obj.name, stringCount, obj.angle, obj.selfAngle, rowAllow);
 		if (obj.satelites && obj.satelites.length > 0) {
 			for (let i = 0, imax = obj.satelites.length; i < imax; i++) {
-				stringCount = run(obj.satelites[i], objX, objY, drawFunction, stringCount + 1);
+				stringCount = run(obj.satelites[i], objX, objY, drawFunction, stringCount + 1, rowAllow);
 			}
 		}
 		let angle = obj.angle;
@@ -70,7 +70,7 @@ Astro Planets
 	};
 	const createDrawFunction = (ctx, width, height)  => {
 		const size = Math.min(width, height)
-		return (x, y, objectRadius, cx, cy, orbisRadius, selfRotationX, selfRotationY, distance, color, name, stringCount, angle, selfAngle) => {
+		return (x, y, objectRadius, cx, cy, orbisRadius, selfRotationX, selfRotationY, distance, color, name, stringCount, angle, selfAngle, rowAllow) => {
 			const colorDark = 'hsl(' + color + ',50%,15%)';
 			const colorBright = 'hsl(' + color + ',100%,70%)';
 			ctx.beginPath();
@@ -84,8 +84,10 @@ Astro Planets
 			distanceCoeff = 0.7 * objectRadius / distance1;
 			let selfRotationDarkness = '0.5';
 			if (x === center && y === center) {
-				ctx.fillStyle = 'black';
-				ctx.fillText(name + 'distance 0.0 angle 0.0 rotation ' + selfAngle.toString().substring(0,7), 0, 0);
+				if (rowAllow > stringCount) {
+					ctx.fillStyle = 'black';
+					ctx.fillText(name + 'distance 0.0 angle 0.0 rotation ' + selfAngle.toString().substring(0,7), 0, 0);
+				}
 				const radialGradient1 = ctx.createRadialGradient(width * x, height * x, size * objectRadius * 0.5, width * x, height * y, size * objectRadius * 1.5);
 				radialGradient1.addColorStop(0.5, 'hsla(' + color + ',100%,50%,1)');
 				radialGradient1.addColorStop(1, 'hsla(' + color + ',100%,50%,0)');
@@ -106,8 +108,10 @@ Astro Planets
 				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
 				ctx.fill();
 			} else {
-				ctx.fillStyle = 'black';
-				ctx.fillText(name +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), 0, stringCount * height * 0.015);
+				if (rowAllow > stringCount) {
+					ctx.fillStyle = 'black';
+					ctx.fillText(name +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), 0, stringCount * height * 0.015);
+				}
 				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
 				linearGradient.addColorStop(0, colorDark);
 				linearGradient.addColorStop(distanceCoeff, colorBright);
@@ -133,7 +137,7 @@ Astro Planets
 			}	
 		};
 	};
-	const createGraphicDrawer = (ctx, width, height) => {
+	const createOscillatorDrawer = (ctx, width, height) => {
 		ctx.fillStyle = 'black';
 		let a0 = Math.random() * 0.5 + 0.5, a1 = Math.random() * 0.5 + 0.5, b0 = Math.random() * 0.5 + 0.5, b1 = Math.random() * 0.5 + 0.5, c0 = Math.random() * 0.5 + 0.5, c1 = Math.random() * 0.5 + 0.5;
 		let start0 = Math.random() * width, start1 = Math.random() * width, start2 = Math.random() * width; 
@@ -176,18 +180,27 @@ Astro Planets
 		ctx.font = (0.015 * height) + 'px Arial';
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
-		const graphicDrawer = createGraphicDrawer(ctx1, canvas1.width, canvas1.height);
+		const oscillatorDrawer = createOscillatorDrawer(ctx1, canvas1.width, canvas1.height);
+		let frameRowAllow = 0, rowAllow = 0;
+		const frameStepRowAllow = 7, maxRowAllow = 100;
 		const animate = () => {
 			ctx.fillStyle = 'white';
 			//ctx.fillStyle = 'rgb(100,100,200)';
 			ctx.fillRect(0, 0, width, height);
 			//ctx.clearRect(0, 0, width, height);
-			graphicDrawer();
+			oscillatorDrawer();
 			ctx.drawImage(canvas1, width * 0.5, 0, canvas1.width, canvas1.height);
 			ctx.fillStyle = 'black';
-			run(testObj1, 0.5, 0.5, drawFunction, 0);
+			run(testObj1, 0.5, 0.5, drawFunction, 0, rowAllow);
 			//console.log(str);
 			animationFrame = requestAnimationFrame(animate);
+			frameRowAllow++;
+			if (frameRowAllow === frameStepRowAllow) {
+				if (rowAllow < maxRowAllow) {
+					rowAllow++;
+				}
+				frameRowAllow = 0;
+			}
 		};
 		animate();
 	};
