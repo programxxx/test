@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Astro Planets
+</title>
+</head>
+<body>
+<script>
+;(() => {
+	'use strict';
+	//document.body.innerHTML = '';
+	document.body.style.backgroundColor = 'black';
+	const canvas = document.createElement('canvas');
+	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
+		{name: 'planetA', color: Math.random() * 360, size: 0.03, distance: 0.2, angle: 0, speed: 0.003, selfAngle: 0, selfSpeed: 0.03, satelites: [
+			{name: 'moonA1', color: Math.random() * 360, size: 0.01, distance: 0.05, angle: 0, speed: 0.01, selfAngle: 0, selfSpeed: 0.04,  satelites: [
+				{name: 'moonA1a', color: Math.random() * 360, size: 0.003, distance: 0.02, angle: 0, speed: 0.025, selfAngle: 0, selfSpeed: 0.05, satelites: []}
+			]},
+			{name: 'moonA2', color: Math.random() * 360, size: 0.01, distance: 0.09, angle: 0, speed: 0.005, selfAngle: 0, selfSpeed: 0.03, satelites: []}
+		]},
+		{name: 'planetB', color: Math.random() * 360, size: 0.02, distance: 0.3, angle: 0, speed: 0.001, selfAngle: 0, selfSpeed: 0.04, satelites: [
+			{name: 'moonA1', color: Math.random() * 360, size: 0.008, distance: 0.1, angle: 0, speed: 0.004, selfAngle: 0, selfSpeed: 0.05, satelites: []}
+		]}
+	]};*/
+	const generateSatelites = (nameOfParent, depth, numberSatelitesMin, numberSatelitesMax, etalon, divisor) => {
+		const arr = [];
+		if (depth <= 0) { return arr; }
+		let distance = etalon;
+		for (let i = 0, imax = Math.round(numberSatelitesMin + Math.random() * (numberSatelitesMax - numberSatelitesMin)); i < imax; i++) {
+			const name = nameOfParent + '_' + String.fromCharCode(i + 65);
+			const color = Math.random() * 360;
+			//const size = 0.5 * etalon * (sizeMin + Math.random() * (sizeMax - sizeMin)) / (i + 1);
+			const size = 0.8 * Math.pow(etalon, 0.9) / (i + 2)  * ((Math.random() - 0.5) * 0.15 + 1);
+			distance += 2 * etalon / imax * ((Math.random() - 0.5) * 0.25 + 1);
+			const angle = i * (1 / imax) + Math.random() / imax;
+			const speed = 0.0001 / (i + 2) / Math.pow(etalon, 1.05);
+			const selfAngle = Math.random();
+			const selfSpeed = ((Math.random() - 0.5) * 0.5 + 1) * 0.002 / Math.pow(etalon, 0.8);
+			const satelites = generateSatelites(name, depth - 1, numberSatelitesMin - 1, numberSatelitesMax - Math.random() * 1.2, etalon * divisor, divisor);
+			arr.push({name: name, color: color, size: size, distance: distance, angle: angle, speed: speed, selfAngle: selfAngle, selfSpeed: selfSpeed, satelites: satelites});
+		}
+		return arr;
+	};
+	const polarToDec = (cx, cy, distance, angle) => {
+		//if (angle > 1) { angle = angle - Math.floor(angle); }
+		angle = 2 * Math.PI * angle;
+		const x = cx + distance * Math.cos(angle);
+		const y = cy + distance * Math.sin(angle);
+		return [x, y];
+	};
+	const run = (obj, x, y, drawFunction, stringCount, rowAllow) => {
+		const [objX, objY] = polarToDec(x, y, obj.distance, obj.angle);
+		let shadowExcentrisity = 0.5;
+		if (obj.distance === 0) { shadowExcentrisity = 0.1; }
+		const [selfRotationX, selfRotationY] = polarToDec(objX, objY, obj.size * shadowExcentrisity, obj.selfAngle);
+		drawFunction(objX, objY, obj.size, x, y, obj.distance, selfRotationX, selfRotationY, obj.distance, obj.color, obj.name, stringCount, obj.angle, obj.selfAngle, rowAllow);
+		if (obj.satelites && obj.satelites.length > 0) {
+			for (let i = 0, imax = obj.satelites.length; i < imax; i++) {
+				stringCount = run(obj.satelites[i], objX, objY, drawFunction, stringCount + 1, rowAllow);
+			}
+		}
+		let angle = obj.angle;
+		angle += obj.speed;
+		if (angle > 1) { angle = angle - Math.floor(angle); }
+		obj.angle = angle;
+		let selfAngle = obj.selfAngle;
+		selfAngle += obj.selfSpeed;
+		if (selfAngle > 1) { selfAngle = selfAngle - Math.floor(selfAngle); }
+		obj.selfAngle = selfAngle;
+		return stringCount;
+	};
+	const createDrawFunction = (ctx, width, height)  => {
+		const size = Math.min(width, height)
+		return (x, y, objectRadius, cx, cy, orbisRadius, selfRotationX, selfRotationY, distance, color, name, stringCount, angle, selfAngle, rowAllow) => {
+			const colorDark = 'hsl(' + color + ',50%,15%)';
+			const colorBright = 'hsl(' + color + ',100%,70%)';
+			ctx.beginPath();
+			ctx.arc(cx * width, cy * height, size * orbisRadius, 0, 2 * Math.PI, false);
+			ctx.stroke();
+			const center = 0.5;
+			distance = distance < 0.01 ? objectRadius : distance;
+			let distanceCoeff = objectRadius / distance;
+			let distance1 = Math.sqrt((center - x) * (center - x) + (center - y) * (center - y));
+			distance1 = distance1 < objectRadius ? objectRadius : distance1;
+			distanceCoeff = 0.7 * objectRadius / distance1;
+			let selfRotationDarkness = '0.5';
+			if (x === center && y === center) {
+				if (rowAllow > stringCount) {
+					ctx.fillStyle = 'green';
+					ctx.fillText(name + 'distance 0.0 angle 0.0 rotation ' + selfAngle.toString().substring(0,7), 0, 0);
+				}
+				const radialGradient1 = ctx.createRadialGradient(width * x, height * x, size * objectRadius * 0.5, width * x, height * y, size * objectRadius * 1.5);
+				radialGradient1.addColorStop(0.5, 'hsla(' + color + ',100%,50%,1)');
+				radialGradient1.addColorStop(1, 'hsla(' + color + ',100%,50%,0)');
+				ctx.fillStyle = radialGradient1;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius * 1.5, 0, 2 * Math.PI, false);
+				ctx.fill();
+				ctx.fillStyle = 'hsl(' + color + ',100%,50%)';
+				selfRotationDarkness = '0.4';
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				const radialGradient = ctx.createRadialGradient(width * selfRotationX, height * selfRotationY, size * objectRadius * 0.5, width * x, height * y, size * objectRadius);
+				radialGradient.addColorStop(0, 'rgba(255,0,0,' + selfRotationDarkness + ')');
+				radialGradient.addColorStop(1, 'rgba(255,0,0,0)');
+				ctx.fillStyle = radialGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+			} else {
+				if (rowAllow > stringCount) {
+					ctx.fillStyle = 'green';
+					ctx.fillText(name +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), 0, stringCount * height * 0.015);
+				}
+				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
+				linearGradient.addColorStop(0, colorDark);
+				linearGradient.addColorStop(distanceCoeff, colorBright);
+				ctx.fillStyle = linearGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				const radialGradient = ctx.createRadialGradient(width * selfRotationX, height * selfRotationY, size * objectRadius * 0.5, width * x, height * y, size * objectRadius);
+				radialGradient.addColorStop(0, 'rgba(0,0,0,' + selfRotationDarkness + ')');
+				radialGradient.addColorStop(1, 'rgba(0,0,0,0)');
+				ctx.fillStyle = radialGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				/*ctx.fillStyle = 'white';
+				ctx.beginPath();
+				ctx.arc((center + (x - center) * (1 - distanceCoeff)) * width, (center + (y - center) * (1 - distanceCoeff)) * height, size * objectRadius * 0.5, 0, 2 * Math.PI, false);
+				ctx.fill();*/
+				ctx.beginPath();
+				ctx.moveTo(x * width, y * height);
+				ctx.lineTo(cx * width, cy * height);
+				ctx.stroke();
+			}	
+		};
+	};
+	const createOscillatorDrawer = (ctx, width, height) => {
+		ctx.fillStyle = 'black';
+		let a0 = Math.random() * 0.5 + 0.5, a1 = Math.random() * 0.5 + 0.5, b0 = Math.random() * 0.5 + 0.5, b1 = Math.random() * 0.5 + 0.5, c0 = Math.random() * 0.5 + 0.5, c1 = Math.random() * 0.5 + 0.5;
+		let start0 = Math.random() * width, start1 = Math.random() * width, start2 = Math.random() * width; 
+		let position = 0;
+		return () => {
+			ctx.clearRect(position, 0, 5, height);
+			const y0 = (0.5 + (Math.sin(0.07 * a0 * (position + start0)) + Math.cos(0.1 * a1 * (position + start0))) / 4) * height;
+			const y1 = (0.5 + (Math.sin(0.07 * b0 * (position + start1)) + Math.cos(0.1 * b1 * (position + start1))) / 4 + 0.3) * height * 0.7;
+			const y2 = (0.5 + (Math.sin(0.07 * c0 * (position + start2)) + Math.cos(0.1 * c1 * (position + start2))) / 4 + 0.6) * height * 0.4;
+			ctx.fillStyle = 'red';
+			ctx.fillRect(position, y0, width * 0.006, width * 0.006);
+			ctx.fillStyle = 'green';
+			ctx.fillRect(position, y1, width * 0.006, width * 0.006);
+			ctx.fillStyle = 'blue';
+			ctx.fillRect(position, y2, width * 0.006, width * 0.006);
+			position += 1;
+			if (position > width) { 
+				position = 0;
+				a0 = Math.random() * 0.5 + 0.5, a1 = Math.random() * 0.5 + 0.5, b0 = Math.random() * 0.5 + 0.5, b1 = Math.random() * 0.5 + 0.5, c0 = Math.random() * 0.5 + 0.5, c1 = Math.random() * 0.5 + 0.5;
+				start0 = Math.random() * width, start1 = Math.random() * width, start2 = Math.random() * width;
+			}
+		};
+	};
+	let animationFrame = undefined;
+	const onresize = (width, height) => {
+		const canvas1 = document.createElement('canvas');
+		canvas1.width = width / 2;
+		canvas1.height = height / 4;
+		const ctx1 = canvas1.getContext('2d');
+		canvas.width = width;
+		canvas.height = height;
+		const ctx = canvas.getContext('2d');
+		cancelAnimationFrame(animationFrame);
+		const drawFunction = createDrawFunction(ctx, width, height);
+		ctx.setLineDash([width / 300, width / 150]);
+		ctx.strokeStyle = 'white';
+		const testObj1 = {name: '_', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
+			satelites: generateSatelites('_', 3, 3, 3, 0.11, 0.35)
+		};
+		ctx.font = (0.015 * height) + 'px Arial';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'top';
+		const oscillatorDrawer = createOscillatorDrawer(ctx1, canvas1.width, canvas1.height);
+		let frameRowAllow = 0, rowAllow = 0;
+		const frameStepRowAllow = 7, maxRowAllow = 100;
+		const animate = () => {
+			ctx.fillStyle = 'black';
+			//ctx.fillStyle = 'rgb(100,100,200)';
+			ctx.fillRect(0, 0, width, height);
+			//ctx.clearRect(0, 0, width, height);
+			oscillatorDrawer();
+			ctx.drawImage(canvas1, width * 0.5, 0, canvas1.width, canvas1.height);
+			ctx.fillStyle = 'black';
+			run(testObj1, 0.5, 0.5, drawFunction, 0, rowAllow);
+			//console.log(str);
+			animationFrame = requestAnimationFrame(animate);
+			frameRowAllow++;
+			if (frameRowAllow === frameStepRowAllow) {
+				if (rowAllow < maxRowAllow) {
+					rowAllow++;
+				}
+				frameRowAllow = 0;
+			}
+		};
+		animate();
+	};
+	const onresize1 = () => {		
+		onresize(Math.min(window.innerWidth, window.innerHeight), Math.min(window.innerWidth, window.innerHeight));
+		//onresize(1000, 1000);
+	};
+	window.addEventListener('resize', onresize1);
+	canvas.addEventListener('click', () => {console.log('click'); onresize1();});
+	document.body.appendChild(canvas);
+	onresize1();
+})();
+</script>
+</body>
+</html>
