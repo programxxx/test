@@ -35,7 +35,7 @@ Astro Planets
 			const speed = 0.0001 / (i + 2) / Math.pow(etalon, 1.05);
 			const selfAngle = Math.random();
 			const selfSpeed = ((Math.random() - 0.5) * 0.5 + 1) * 0.002 / (i + 1) / Math.pow(etalon, 0.8);
-			const satelites = generateSatelites(name, depth - 1, numberSatelitesMin - 1, numberSatelitesMax - Math.random() * 1.5, etalon * divisor, divisor);
+			const satelites = generateSatelites(name, depth - 1, numberSatelitesMin - 1, numberSatelitesMax - Math.random() * 1.0, etalon * divisor, divisor);
 			arr.push({name: name, color: color, size: size, distance: distance, angle: angle, speed: speed, selfAngle: selfAngle, selfSpeed: selfSpeed, satelites: satelites});
 		}
 		return arr;
