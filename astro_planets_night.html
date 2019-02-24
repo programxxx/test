@@ -11,13 +11,17 @@ Astro Planets
 	'use strict';
 	document.body.innerHTML = '';
 	document.body.style.backgroundColor = 'black';
-	document.body.style.backgroundImage = 'url(https://adventure.com/wp-content/uploads/2017/12/Hero-GBI-Dark-Sky-Mark-Russell-7-1920x1080.jpg)';
-	document.body.style.backgroundSize = 'cover';
-	document.body.style.backgroundPosition = 'center';
-	document.body.style.backgroundRepeat = 'no-repeat';
+	//document.body.style.backgroundImage = 'url(https://adventure.com/wp-content/uploads/2017/12/Hero-GBI-Dark-Sky-Mark-Russell-7-1920x1080.jpg)';
+	//document.body.style.backgroundSize = 'cover';
+	//document.body.style.backgroundPosition = 'center';
+	//document.body.style.backgroundRepeat = 'no-repeat';
 	document.body.style.textAlign = 'center';
 	const div = document.createElement('div');
 	div.style.textAlign = 'center';
+	div.style.backgroundImage = 'url(https://adventure.com/wp-content/uploads/2017/12/Hero-GBI-Dark-Sky-Mark-Russell-7-1920x1080.jpg)';
+	div.style.backgroundSize = 'cover';
+	div.style.backgroundPosition = 'center';
+	div.style.backgroundRepeat = 'no-repeat';
 	document.body.appendChild(div);
 	//document.body.backgroundPosition = 'center center';
 	const canvas = document.createElement('canvas');
@@ -96,7 +100,7 @@ Astro Planets
 			let selfRotationDarkness = '0.5';
 			if (x === center && y === center) {
 				if (rowAllow > stringCount) {
-					ctx.fillStyle = 'rgb(50,255,50)';
+					ctx.fillStyle = 'rgb(100,255,100)';
 					ctx.fillText(name + 'distance 0.0 angle 0.0 rotation ' + selfAngle.toString().substring(0,7), 0, 0);
 				}
 				const radialGradient1 = ctx.createRadialGradient(width * x, height * x, size * objectRadius * 0.5, width * x, height * y, size * objectRadius * 1.5);
@@ -120,7 +124,7 @@ Astro Planets
 				ctx.fill();
 			} else {
 				if (rowAllow > stringCount) {
-					ctx.fillStyle = 'rgb(50,255,50)';
+					ctx.fillStyle = 'rgb(100,255,100)';
 					ctx.fillText(name +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), 0, stringCount * height * 0.015);
 				}
 				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
@@ -160,7 +164,7 @@ Astro Planets
 			const y2 = (0.5 + (Math.sin(0.07 * c0 * (position + start2)) + Math.cos(0.1 * c1 * (position + start2))) / 4 + 0.6) * height * 0.4;
 			ctx.fillStyle = 'rgb(255,0,0)';
 			ctx.fillRect(position, y0, width * 0.006, width * 0.006);
-			ctx.fillStyle = 'rgb(50,255,50)';
+			ctx.fillStyle = 'rgb(100,255,100)';
 			ctx.fillRect(position, y1, width * 0.006, width * 0.006);
 			ctx.fillStyle = 'rgb(50,50,255)';
 			ctx.fillRect(position, y2, width * 0.006, width * 0.006);
@@ -226,19 +230,26 @@ Astro Planets
 		};
 		const pre = document.createElement('pre');
 		pre.style.textAlign = 'center';
-		//pre.style.width = '50vw';
-		pre.style.left = '22vw';
-		pre.style.top = '72vh';
-		pre.style.font = '3vw Arial';
+		const canvasRect = canvas.getBoundingClientRect();
+		pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
+		pre.style.top = (canvasRect.height * 0.72) + 'px';// '72vh';
+		pre.style.font = (canvasRect.width * 0.047) + 'px Arial';
 		pre.style.textAlign = 'left';
 		//pre.style.backgroundColor = 'red';
 		pre.style.position = 'absolute';
-		pre.style.color = 'rgba(170,255,170,0.65)';
+		pre.style.color = 'rgba(180,255,150,0.65)';
 		div.appendChild(pre);
 		printTextMotion(pre, stringToPrint);
 	};
 	let animationFrame = undefined;
 	const onresize = (width, height) => {
+		if (width > 1080) {
+			width = height = 1080;
+			div.width = width;
+		} else if (width < 600) {
+			width = height = 600;
+			div.width = width;
+		}
 		const canvas1 = document.createElement('canvas');
 		canvas1.width = width / 2;
 		canvas1.height = height / 4;
@@ -290,6 +301,11 @@ Astro Planets
 	canvas.addEventListener('click', () => {console.log('click'); onresize1();});
 	div.appendChild(canvas);
 	onresize1();
+	(() => {
+		const div = document.createElement('div');
+		div.style.height = '2000px';
+		document.body.appendChild(div);
+	})();
 })();
 </script>
 </body>
