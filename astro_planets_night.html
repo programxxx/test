@@ -293,11 +293,8 @@ Astro Planets
 		animate();
 		printText('Лаборатория Тактической Астрологии');
 	};
-	let oldSize = undefined;
 	const onresize1 = () => {
 		const newSize = Math.min(window.innerWidth, window.innerHeight);
-		if (oldSize && oldSize === newSize) { return; }
-		oldSize = newSize;
 		onresize(newSize, newSize);
 		//onresize(1000, 1000);
 	};
