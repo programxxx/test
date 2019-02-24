@@ -16,6 +16,9 @@ Astro Planets
 	document.body.style.backgroundPosition = 'center';
 	document.body.style.backgroundRepeat = 'no-repeat';
 	document.body.style.textAlign = 'center';
+	const div = document.createElement('div');
+	div.style.textAlign = 'center';
+	document.body.appendChild(div);
 	//document.body.backgroundPosition = 'center center';
 	const canvas = document.createElement('canvas');
 	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
@@ -169,6 +172,71 @@ Astro Planets
 			}
 		};
 	};
+	let interval = undefined;
+	const printText = stringToPrint => {
+		const preToRemove = div.getElementsByTagName('pre')[0];
+		if (preToRemove) {
+			preToRemove.parentNode.removeChild(preToRemove);
+		}
+		clearInterval(interval);
+		const printTextMotion = (container, text) => {
+			//let interval = undefined; // global interval
+				(() => {
+					return new Promise((resolve, reject) => {
+						const maxLettersAllow = text.length + 1;
+						let lettersAllow = 0;
+						let interval = undefined;
+						const f = () => {
+							const str = text.substring(0, lettersAllow) + '_';
+							container.textContent = str;
+							if (lettersAllow < maxLettersAllow) {
+								lettersAllow++;
+							} else {
+								clearInterval(interval);
+								resolve();
+							}
+						};
+						interval = setInterval(f, 100);
+					});
+				})().then(() => {
+					return new Promise((resolve, reject) => {
+						const maxTicks = 999;
+						let tick = 0;
+						let showCursor = false;
+						let interval= undefined;
+						const f = () => {
+							let cursorStr = ' ';
+							if (showCursor) {
+								cursorStr = '_';
+							}
+							tick++;
+							showCursor = !showCursor;
+							if (tick >= maxTicks) {
+								container.textContent = text;
+								clearInterval(interval);
+								resolve();
+							} else {
+								const str = text + cursorStr;
+								container.textContent = str;
+							}
+						};
+						interval = setInterval(f, 300);
+					});
+				});
+		};
+		const pre = document.createElement('pre');
+		pre.style.textAlign = 'center';
+		//pre.style.width = '50vw';
+		pre.style.left = '25vw';
+		pre.style.top = '72vmin';
+		pre.style.font = '3vmin Arial';
+		pre.style.textAlign = 'left';
+		//pre.style.backgroundColor = 'red';
+		pre.style.position = 'absolute';
+		pre.style.color = 'rgba(50,255,50,0.7)';
+		div.appendChild(pre);
+		printTextMotion(pre, stringToPrint);
+	};
 	let animationFrame = undefined;
 	const onresize = (width, height) => {
 		const canvas1 = document.createElement('canvas');
@@ -182,7 +250,7 @@ Astro Planets
 		const drawFunction = createDrawFunction(ctx, width, height);
 		ctx.setLineDash([width / 300, width / 150]);
 		ctx.strokeStyle = 'white';
-		ctx.lineWidth = 2;
+		ctx.lineWidth = width / 400; // 2
 		const testObj1 = {name: '_', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
 			satelites: generateSatelites('_', 3, 3, 3, 0.11, 0.35)
 		};
@@ -212,6 +280,7 @@ Astro Planets
 			}
 		};
 		animate();
+		printText('Лаборатория Тактической Астрологии');
 	};
 	const onresize1 = () => {		
 		onresize(Math.min(window.innerWidth, window.innerHeight), Math.min(window.innerWidth, window.innerHeight));
@@ -219,7 +288,7 @@ Astro Planets
 	};
 	window.addEventListener('resize', onresize1);
 	canvas.addEventListener('click', () => {console.log('click'); onresize1();});
-	document.body.appendChild(canvas);
+	div.appendChild(canvas);
 	onresize1();
 })();
 </script>
