@@ -304,7 +304,7 @@ Astro Planets
 	let oldSize = undefined;
 	const onresize1 = e => {
 		let resizeIt = false;
-		const newSize = Math.min(window.innerWidth, window.innerHeight);
+		const newSize = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.95);
 		if (oldSize) {
 			if (1 - Math.min(newSize, oldSize) / Math.max(newSize, oldSize) > 0.25) {
 				resizeIt = true;
