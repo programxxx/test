@@ -129,8 +129,10 @@ Astro Planets
 				ctx.fill();
 			} else {
 				if (rowAllow > stringCount) {
+					//ctx.fillStyle = 'rgb(100,255,100)';
+					//ctx.fillText(name  + ' '.repeat(7 - name.length) +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025 + stringCount * height * 0.015);
 					ctx.fillStyle = 'rgb(100,255,100)';
-					ctx.fillText(name +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025 + stringCount * height * 0.015);
+					ctx.fillText(name  + ' '.repeat(7 - name.length) +  ' D: ' + (distance1 * width).toString().substring(0,7) + ' A: ' + angle.toString().substring(0,7) + ' R: ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025 + stringCount * height * 0.015);
 				}
 				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
 				linearGradient.addColorStop(0, colorDark);
@@ -239,7 +241,7 @@ Astro Planets
 		const canvasRect = canvas.getBoundingClientRect();
 		pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
 		pre.style.top = (canvasRect.height * 0.72) + 'px';// '72vh';
-		pre.style.font = (canvasRect.width * 0.047) + 'px Arial';
+		pre.style.font = (canvasRect.width * 0.047) + 'px Courier';
 		pre.style.textAlign = 'left';
 		//pre.style.backgroundColor = 'red';
 		pre.style.position = 'absolute';
@@ -271,7 +273,7 @@ Astro Planets
 		const testObj1 = {name: '_', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
 			satelites: generateSatelites('_', 3, 3, 3, 0.11, 0.35)
 		};
-		ctx.font = (0.015 * height) + 'px Arial';
+		ctx.font = (0.015 * height) + 'px Courier';
 		ctx.textAlign = 'left';
 		ctx.textBaseline = 'top';
 		const oscillatorDrawer = createOscillatorDrawer(ctx1, canvas1.width, canvas1.height);
@@ -304,7 +306,7 @@ Astro Planets
 		let resizeIt = false;
 		const newSize = Math.min(window.innerWidth, window.innerHeight);
 		if (oldSize) {
-			if (1 - Math.min(newSize, oldSize) / Math.max(newSize, oldSize) > 0.25) {
+			if (1 - Math.min(newSize, oldSize) / Math.max(newSize, oldSize) > 0.18) {
 				resizeIt = true;
 				oldSize = newSize;
 			}
