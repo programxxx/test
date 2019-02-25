@@ -252,6 +252,7 @@ Astro Planets
 		printTextMotion(pre, stringToPrint);
 	};
 	let animationFrame = undefined;
+	let checkIntervalScroll = undefined;
 	const onresize = (width, height) => {
 		if (width > 1080) {
 			width = height = 1080;
@@ -298,6 +299,23 @@ Astro Planets
 				frameRowAllow = 0;
 			}
 		};
+		let animationCancelledOnScroll = false;
+		const scrollCheck = () => {
+			const canvasRect = canvas.getBoundingClientRect();
+			if (canvasRect.bottom < 0) {
+				if (!animationCancelledOnScroll) {
+					cancelAnimationFrame(animationFrame);
+					animationCancelledOnScroll = !animationCancelledOnScroll;
+				}
+			} else {
+				if (animationCancelledOnScroll) {
+					animationFrame = requestAnimationFrame(animate);
+					animationCancelledOnScroll = !animationCancelledOnScroll;
+				}
+			}
+		};
+		clearInterval(checkIntervalScroll);
+		checkIntervalScroll = setInterval(scrollCheck, 100);
 		animate();
 		printText('Лаборатория Тактической Астрологии');
 	};
@@ -333,8 +351,17 @@ Astro Planets
 	div.appendChild(canvas);
 	onresize1('do it!');
 	(() => {
+		const divBlack = document.createElement('div');
+		divBlack.style.height = '100px';
+		divBlack.style.background = 'black';
+		document.body.appendChild(divBlack); // white stars on black background, balck stars on white backrgoung (moon, sun)
+		/*const divGradient = document.createElement('div');
+		divGradient.style.height = '100px';
+		divGradient.style.background = 'linear-gradient(to bottom, black, white)';
+		document.body.appendChild(divGradient);*/
 		const div = document.createElement('div');
 		div.style.height = '2000px';
+		div.style.background = 'white';
 		document.body.appendChild(div);
 	})();
 })();
