@@ -28,6 +28,10 @@ Astro Planets
 	div.style.margin = '0px';
 	div.style.padding = '0px';
 	document.body.appendChild(div);
+	const divBlack = document.createElement('div');
+	divBlack.style.height = '0px';
+	divBlack.style.background = 'black';
+	document.body.appendChild(divBlack);
 	//document.body.backgroundPosition = 'center center';
 	const canvas = document.createElement('canvas');
 	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
@@ -342,6 +346,8 @@ Astro Planets
 	};
 	let oldSize = undefined;
 	const onresize1 = e => {
+		divBlack.style.height = 
+		divBlack.style.height = ((window.innerHeight - Math.min(window.innerWidth, window.innerHeight)) + 200) + 'px';
 		if (pre) {
 			const canvasRect = canvas.getBoundingClientRect();
 			pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
@@ -372,17 +378,17 @@ Astro Planets
 	div.appendChild(canvas);
 	onresize1('do it!');
 	(() => {
-		const divBlack = document.createElement('div');
+		/*const divBlack = document.createElement('div');
 		divBlack.style.height = '100px';
 		divBlack.style.background = 'black';
-		document.body.appendChild(divBlack); // white stars on black background, balck stars on white backrgoung (moon, sun)
+		document.body.appendChild(divBlack); */ // white stars on black background, balck stars on white backrgoung (moon, sun)
 		/*const divGradient = document.createElement('div');
 		divGradient.style.height = '100px';
 		divGradient.style.background = 'linear-gradient(to bottom, black, white)';
 		document.body.appendChild(divGradient);*/
 		const div = document.createElement('div');
 		div.style.height = '2000px';
-		div.style.background = 'black'; //'white';
+		div.style.background = 'white';
 		document.body.appendChild(div);
 	})();
 })();
