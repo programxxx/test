@@ -185,6 +185,7 @@ Astro Planets
 		};
 	};
 	let interval = undefined;
+	let pre = undefined;
 	const printText = stringToPrint => {
 		const preToRemove = div.getElementsByTagName('pre')[0];
 		if (preToRemove) {
@@ -236,7 +237,8 @@ Astro Planets
 					});
 				});
 		};
-		const pre = document.createElement('pre');
+		//const pre = document.createElement('pre');
+		pre = document.createElement('pre'); // global
 		pre.style.textAlign = 'center';
 		const canvasRect = canvas.getBoundingClientRect();
 		pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
@@ -253,10 +255,8 @@ Astro Planets
 	const onresize = (width, height) => {
 		if (width > 1080) {
 			width = height = 1080;
-			div.width = width;
 		} else if (width < 600) {
 			width = height = 600;
-			div.width = width;
 		}
 		const canvas1 = document.createElement('canvas');
 		canvas1.width = width / 2;
@@ -303,6 +303,10 @@ Astro Planets
 	};
 	let oldSize = undefined;
 	const onresize1 = e => {
+		if (pre) {
+			const canvasRect = canvas.getBoundingClientRect();
+			pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
+		}
 		let resizeIt = false;
 		const newSize = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.95);
 		if (oldSize) {
