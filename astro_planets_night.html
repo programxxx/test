@@ -253,6 +253,7 @@ Astro Planets
 	};
 	let animationFrame = undefined;
 	let checkIntervalScroll = undefined;
+	let intervalPrintText = undefined;
 	const onresize = (width, height) => {
 		if (width > 1080) {
 			width = height = 1080;
@@ -317,7 +318,27 @@ Astro Planets
 		clearInterval(checkIntervalScroll);
 		checkIntervalScroll = setInterval(scrollCheck, 100);
 		animate();
-		printText('Лаборатория Тактической Астрологии');
+		let printCount = 0;
+		clearInterval(intervalPrintText);
+		const printTextFunc = () => {
+			if (printCount === 0) {
+				printText(new Date().toString().substring(0, 15));
+			} else if (printCount === 1) {
+				printText(new Date().toString().substring(16, 33));
+			} else if (printCount === 2) {
+				printText('STAR SYS processing OK');
+			} else if (printCount === 3) {
+				printText('Gravity coeff ' + ((Math.random() + Math.random() + Math.random()  + Math.random()  + Math.random()) / 5).toString(10).substring(0, 7));
+			} else if (printCount === 4) {
+				printText('Radiation level ' + (((((Math.random() + Math.random() + Math.random()  + Math.random()  + Math.random()) / 5) - 0.5) * 2 * 0.3 + 1) * 80).toString(10).substring(0, 5));
+			}
+			printCount++;
+			if (printCount > 4) {
+				printCount = 0;
+			}
+		};
+		intervalPrintText = setInterval(printTextFunc, 7000);
+		printTextFunc();
 	};
 	let oldSize = undefined;
 	const onresize1 = e => {
