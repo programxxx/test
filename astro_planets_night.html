@@ -33,8 +33,18 @@ Astro Planets
 	document.body.appendChild(div);
 	const divBlack = document.createElement('div');
 	divBlack.style.height = '0px';
-	divBlack.style.background = 'black';
+	divBlack.style.background = 'rgb(0,0,0)';
+	divBlack.style.margin = 0;
+	divBlack.style.padding = '5%'; 
+	divBlack.style.display = 'inline-block';
 	document.body.appendChild(divBlack);
+	const divWhite = document.createElement('div');
+	divWhite.style.height = '0px';
+	divWhite.style.background = 'rgb(200,200,200)';
+	divWhite.style.margin = 0;
+	divWhite.style.padding = '5%'; 
+	divWhite.style.display = 'inline-block';
+	document.body.appendChild(divWhite);
 	//document.body.backgroundPosition = 'center center';
 	const canvas = document.createElement('canvas');
 	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
@@ -350,14 +360,22 @@ Astro Planets
 	let oldSize = undefined;
 	const onresize1 = e => {
 		//divBlack.style.height = ((window.innerHeight - Math.min(window.innerWidth, window.innerHeight)) + 200) + 'px';
-		divBlack.style.height = Math.floor(window.innerWidth * 0.4) + 'px';
-		const h1 = document.createElement('h1');
-		h1.textContent = 'Звезды могут помочь найти ответы на вопросы здесь на Земле';
-		h1.style.font = (window.innerWidth * 0.07) + 'px sans-serif';
-		h1.style.color = 'white';
-		h1.style.margin = '5%';
+		divBlack.style.height = Math.floor(window.innerWidth * 0.15) + 'px';
+		const h1b = document.createElement('h1');
+		h1b.textContent = 'Звезды умеют отвечать на вопросы';
+		h1b.style.font = (window.innerWidth * 0.07) + 'px sans-serif';
+		h1b.style.color = 'white';
+		h1b.style.margin = '0%';
 		divBlack.innerHTML = '';
-		divBlack.appendChild(h1);
+		divBlack.appendChild(h1b);
+		divWhite.style.height = Math.floor(window.innerWidth * 0.15) + 'px';
+		const h1w = document.createElement('h1');
+		h1w.textContent = 'Надо лишь уметь их задавать';
+		h1w.style.font = (window.innerWidth * 0.07) + 'px sans-serif';
+		h1w.style.color = 'black';
+		h1w.style.margin = '0%';
+		divWhite.innerHTML = '';
+		divWhite.appendChild(h1w);
 		if (pre) {
 			const canvasRect = canvas.getBoundingClientRect();
 			pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
