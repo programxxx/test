@@ -349,8 +349,15 @@ Astro Planets
 	};
 	let oldSize = undefined;
 	const onresize1 = e => {
-		divBlack.style.height = 
-		divBlack.style.height = ((window.innerHeight - Math.min(window.innerWidth, window.innerHeight)) + 200) + 'px';
+		//divBlack.style.height = ((window.innerHeight - Math.min(window.innerWidth, window.innerHeight)) + 200) + 'px';
+		divBlack.style.height = Math.floor(window.innerWidth * 0.4) + 'px';
+		const h1 = document.createElement('h1');
+		h1.textContent = 'Звезды могут помочь найти ответы на вопросы здесь на Земле';
+		h1.style.font = (window.innerWidth * 0.07) + 'px sans-serif';
+		h1.style.color = 'white';
+		h1.style.margin = '5%';
+		divBlack.innerHTML = '';
+		divBlack.appendChild(h1);
 		if (pre) {
 			const canvasRect = canvas.getBoundingClientRect();
 			pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
