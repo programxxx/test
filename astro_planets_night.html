@@ -10,7 +10,7 @@ Astro Planets
 ;(() => {
 	'use strict';
 	document.body.innerHTML = '';
-	document.body.style.backgroundColor = 'black';
+	document.body.style.background = 'linear-gradient(to bottom, rgb(0,20,60), rgb(50,0,100))';
 	//document.body.style.backgroundImage = 'url(https://adventure.com/wp-content/uploads/2017/12/Hero-GBI-Dark-Sky-Mark-Russell-7-1920x1080.jpg)';
 	//document.body.style.backgroundSize = 'cover';
 	//document.body.style.backgroundPosition = 'center';
@@ -32,25 +32,34 @@ Astro Planets
 	div.style.margin = '0px';
 	div.style.padding = '0px';
 	document.body.appendChild(div);
+	/*
 	const divBlack = document.createElement('div');
 	divBlack.style.height = '0px';
 	//divBlack.style.background = 'rgb(0,0,0)';
 	divBlack.style.background = 'linear-gradient(to bottom, rgb(0,10,50), rgb(0,0,0))';
+	//divBlack.style.backgroundImage = 'url(https://uploads-ssl.webflow.com/5b227a6bd898e25ae5ce18af/5c4b5223d9b96fe8c6be76a9_overheard-in-product.jpg)';
+	divBlack.style.backgroundPosition = 'center center';
 	divBlack.style.margin = 0;
-	divBlack.style.padding = '5%'; 
+	divBlack.style.padding = '5%';
+	divBlack.style.width  = '100%';
 	divBlack.style.display = 'inline-block';
+	divBlack.style.textAlign = 'center';
 	document.body.appendChild(divBlack);
 	const divWhite = document.createElement('div');
 	divWhite.style.height = '0px';
 	divWhite.style.background = 'rgb(200,200,200)';
-	//divWhite.style.background = 'url(https://cdn.shopify.com/s/files/1/0806/5321/products/STARS-WALLPAPER_1024x1024.jpg?v=1507585728';
+	//divWhite.style.backgroundImage = 'url(https://cdn.shopify.com/s/files/1/0806/5321/products/STARS-WALLPAPER_1024x1024.jpg?v=1507585728';
 	divWhite.style.backgroundImage = 'url(https://s3.amazonaws.com/spoonflower/public/design_thumbnails/0158/4623/rstars_grey_mirror.png)';
+	//divWhite.style.background = 'linear-gradient(to bottom, rgb(0,0,0), rgb(0,50,255), rgb(255,255,255))';
 	divWhite.style.backgroundRepeat = 'repeat';
 	//divWhite.style.backgroundSize = '500px';
 	divWhite.style.margin = 0;
 	divWhite.style.padding = '5%'; 
+	divWhite.style.width  = '100%';
 	divWhite.style.display = 'inline-block';
+	divWhite.style.textAlign = 'center';
 	document.body.appendChild(divWhite);
+	*/
 	//document.body.backgroundPosition = 'center center';
 	const canvas = document.createElement('canvas');
 	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
@@ -265,7 +274,7 @@ Astro Planets
 		pre.style.textAlign = 'center';
 		const canvasRect = canvas.getBoundingClientRect();
 		pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
-		pre.style.top = (canvasRect.height * 0.72) + 'px';// '72vh';
+		pre.style.top = (canvasRect.height * 0.85) + 'px';//(canvasRect.height * 0.72) + 'px';// '72vh';
 		pre.style.font = (canvasRect.width * 0.048) + 'px sans-serif';
 		pre.style.textAlign = 'left';
 		//pre.style.backgroundColor = 'red';
@@ -365,23 +374,25 @@ Astro Planets
 	};
 	let oldSize = undefined;
 	const onresize1 = e => {
+		/*
 		//divBlack.style.height = ((window.innerHeight - Math.min(window.innerWidth, window.innerHeight)) + 200) + 'px';
-		divBlack.style.height = Math.floor(window.innerWidth * 0.15) + 'px';
+		divBlack.style.height = Math.floor(window.innerWidth * 0.05) + 'px';
 		const h1b = document.createElement('h1');
 		h1b.textContent = 'Реальная практическая астрология';//'Звезды знают ответы на вопросы';//'Звезды умеют отвечать на вопросы';
-		h1b.style.font = (window.innerWidth * 0.07) + 'px sans-serif';
+		h1b.style.font = (window.innerWidth * 0.05) + 'px sans-serif';
 		h1b.style.color = 'rgb(180,180,255)';
 		h1b.style.margin = '0%';
 		divBlack.innerHTML = '';
 		divBlack.appendChild(h1b);
-		divWhite.style.height = Math.floor(window.innerWidth * 0.15) + 'px';
+		divWhite.style.height = Math.floor(window.innerWidth * 0.05) + 'px';
 		const h1w = document.createElement('h1');
 		h1w.textContent = 'На каждый вопрос есть ответ';//'Надо лишь уметь их задавать';
-		h1w.style.font = (window.innerWidth * 0.07) + 'px sans-serif';
+		h1w.style.font = (window.innerWidth * 0.05) + 'px sans-serif';
 		h1w.style.color = 'black';
 		h1w.style.margin = '0%';
 		divWhite.innerHTML = '';
 		divWhite.appendChild(h1w);
+		*/
 		if (pre) {
 			const canvasRect = canvas.getBoundingClientRect();
 			pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
@@ -421,8 +432,10 @@ Astro Planets
 		divGradient.style.background = 'linear-gradient(to bottom, black, white)';
 		document.body.appendChild(divGradient);*/
 		const div = document.createElement('div');
+		div.style.margin = 0;
 		div.style.height = '2000px';
 		div.style.background = 'white';
+		div.style.borderRadius = '30vw';
 		document.body.appendChild(div);
 	})();
 })();
