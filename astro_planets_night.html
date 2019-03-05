@@ -439,7 +439,46 @@ Astro Planets
 		document.body.appendChild(div);
 		;(() => {
 			'use strict';
-			const createParagraph = (imgUrl, header, sizeVw) => {
+			const createRandomString = length => {
+				let str = '';
+				for (let i = 0; i < length; i++) {
+					if (Math.random() < 0.2) {
+						str += ' ';
+					} else {
+						str += String.fromCharCode(Math.floor(Math.random() * (122 - 97)) + 97);
+					}
+				}
+				return str;
+			};
+			const createDummy = (width, height) => {
+				const div = document.createElement('div');
+				div.style.width = width;
+				div.style.height = height;
+				div.style.display = 'block';
+				//div.style.background = 'yellow';
+				return div;
+			};
+			const createOnclick = (container, arrayStrings, width, font) => {
+				let clicked = false;
+				return e => {
+					container.style.width = width;
+					if (!clicked) {
+						arrayStrings.forEach(string => {
+							const p = document.createElement('p');
+							p.textContent = string;
+							p.style.font = font;
+							p.style.color = 'grey';
+							p.style.textAlign = 'left';
+							p.style.width = width;
+							container.appendChild(p);
+						});
+					} else {
+						container.innerHTML = '';
+					}
+					clicked = !clicked;
+				};
+			};
+			const createParagraph = (imgUrl, header, sizeVw, arrayStrings) => {
 				const div = document.createElement('div');
 				div.style.display = 'block';
 				div.style.padding = 'auto';
@@ -449,7 +488,8 @@ Astro Planets
 				//div.style.boxShadow = '0.35vw 0.35vw 1vw rgba(0,0,0,0.5)';
 				div.style.boxShadow = '0 0 ' + (sizeVw / 20) + 'vw rgba(0,0,0,0.5)';
 				div.style.width = sizeVw + 'vw';
-				div.style.height = sizeVw + 'vw';
+				//div.style.height = sizeVw + 'vw';
+				div.style.height = 'auto';
 				//div.style.background = 'rgb(255,255,100)';
 				div.style.borderRadius = (sizeVw / 3) + 'vw';
 				const divImg = document.createElement('div');
@@ -473,13 +513,20 @@ Astro Planets
 				pHeader.style.textAlign = 'center';
 				pHeader.style.margin = 'auto';
 				div.appendChild(pHeader);
-				return div;
-			};
-			const createDummy = (width, height) => {
-				const div = document.createElement('div');
-				div.style.width = width;
-				div.style.height = height;
-				div.style.display = 'block';
+				div.appendChild(createDummy((sizeVw * 0.02) + 'vw', (sizeVw * 0.02) + 'vw'));
+				const divText = document.createElement('div');
+				divText.style.margin = 0;
+				divText.style.textAlign = 'center';
+				divText.style.display = 'block';
+				//divText.style.background = 'yellow';
+				divText.style.width = (2 * sizeVw / 3) + 'vw';
+				divText.wordWrap = 'break-word';
+				divText.style.padding = 'auto';
+				divText.style.margin = 'auto';
+				div.appendChild(divText);
+				div.appendChild(createDummy((sizeVw * 0.04) + 'vw', (sizeVw * 0.04) + 'vw'));
+				const onclickFunction = createOnclick(divText, arrayStrings, (2 * sizeVw / 3) + 'vw', (0.1 * sizeVw / 3) + 'vw sans-serif');
+				div.onclick = onclickFunction;
 				return div;
 			};
 			(container => {
@@ -487,13 +534,13 @@ Astro Planets
 				const dummyWidth = '3vw';
 				const dummyHeight = '3vw';
 				container.appendChild(createDummy(dummyWidth, dummyHeight));
-				container.appendChild(createParagraph('http://trenirofka.ru/wp-content/uploads/2018/01/kak-nakachat-biceps.jpg', 'Прокачай Свои Планеты!', sizeVw));
+				container.appendChild(createParagraph('http://trenirofka.ru/wp-content/uploads/2018/01/kak-nakachat-biceps.jpg', 'Прокачай Свои Планеты!', sizeVw, new Array(10).fill(0).map(() => createRandomString(100))));
 				container.appendChild(createDummy(dummyWidth, dummyHeight));
-				container.appendChild(createParagraph('https://www.nastroy.net/pic/images/post/726894-1524412839.jpg', 'Астрология Удачи', sizeVw));
+				container.appendChild(createParagraph('https://www.nastroy.net/pic/images/post/726894-1524412839.jpg', 'Астрология Удачи', sizeVw, new Array(10).fill(0).map(() => createRandomString(100))));
 				container.appendChild(createDummy(dummyWidth, dummyHeight));
-				container.appendChild(createParagraph('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Broken_heart.svg/1250px-Broken_heart.svg.png', 'Астрология Любви и Отношений', sizeVw));
+				container.appendChild(createParagraph('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Broken_heart.svg/1250px-Broken_heart.svg.png', 'Астрология Любви и Отношений', sizeVw, new Array(10).fill(0).map(() => createRandomString(100))));
 				container.appendChild(createDummy(dummyWidth, dummyHeight));
-				container.appendChild(createParagraph('http://rzg.info.pl/wp-content/uploads/2018/05/2776_bbbt_124515.jpg', 'Астрология Карьеры и Бизнеса', sizeVw));
+				container.appendChild(createParagraph('http://rzg.info.pl/wp-content/uploads/2018/05/2776_bbbt_124515.jpg', 'Астрология Карьеры и Бизнеса', sizeVw, new Array(10).fill(0).map(() => createRandomString(100))));
 				container.appendChild(createDummy(dummyWidth, dummyHeight));
 			})(div);
 		})();
