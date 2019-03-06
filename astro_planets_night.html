@@ -454,27 +454,27 @@ Astro Planets
 				const div = document.createElement('div');
 				div.style.width = width;
 				div.style.height = height;
-				div.style.padding = 'auto';
-				div.style.margin = 'auto';
 				div.style.display = 'block';
 				//div.style.background = 'yellow';
 				return div;
 			};
-			const createOnclick = (container, arrayStrings, width, font) => {
+			const createOnclick = (container, arrayStrings, width, font, container1, sizeVw) => {
 				let clicked = false;
 				return e => {
-					container.style.width = width;
+					container.style.width = width * 1.33 + 'vw';
 					if (!clicked) {
+						container1.style.width = sizeVw * 1.33 + 'vw';
 						arrayStrings.forEach(string => {
 							const p = document.createElement('p');
 							p.textContent = string;
-							p.style.font = font;
+							p.style.font = font * 1.33 + 'vw sans-serif';
 							p.style.color = 'grey';
 							p.style.textAlign = 'left';
 							p.style.width = width;
 							container.appendChild(p);
 						});
 					} else {
+						container1.style.width = sizeVw + 'vw';
 						container.innerHTML = '';
 					}
 					clicked = !clicked;
@@ -527,7 +527,7 @@ Astro Planets
 				divText.style.margin = 'auto';
 				div.appendChild(divText);
 				div.appendChild(createDummy((sizeVw * 0.04) + 'vw', (sizeVw * 0.04) + 'vw'));
-				const onclickFunction = createOnclick(divText, arrayStrings, (2 * sizeVw / 3) + 'vw', (0.1 * sizeVw / 3) + 'vw sans-serif');
+				const onclickFunction = createOnclick(divText, arrayStrings, (2 * sizeVw / 3), (0.1 * sizeVw / 3), div, sizeVw);
 				div.onclick = onclickFunction;
 				return div;
 			};
