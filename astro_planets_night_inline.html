@@ -473,7 +473,7 @@ Astro Planets
 							const p = document.createElement('p');
 							p.textContent = string;
 							p.style.font = font * 1.33 + 'vw sans-serif';
-							p.style.color = 'grey';
+							//p.style.color = 'grey';
 							p.style.textAlign = 'center';
 							p.style.width = width;
 							container.appendChild(p);
@@ -492,7 +492,9 @@ Astro Planets
 				div.style.padding = 0;
 				div.style.margin = 0;
 				div.style.border = 0;
-				div.style.background = 'hsl(' + (Math.random() * 360) + ',35%,80%)';
+				//div.style.background = 'hsl(' + (Math.random() * 360) + ',35%,80%)';
+				div.style.background = textAlign === 'left' ? 'rgb(210,210,255)' : 'rgb(120,100,130)';
+				div.style.color = textAlign === 'left' ? 'rgb(100,100,100)' : 'rgb(255,255,255)';
 				div.style.textAlign = textAlign;
 				div.align = textAlign;
 				div.style.width = '100%';
@@ -500,8 +502,8 @@ Astro Planets
 				const divImg = document.createElement('div');
 				divImg.style.backgroundImage = 'url(' + imgUrl + ')';
 				divImg.style.backgroundPosition = 'center center';
-				divImg.style.borderRadius = '100vw';//(sizeVw / 6) + 'vw';
-				divImg.style.backgroundSize = 'cover';(2 * sizeVw / 3) + 'vw';
+				divImg.style.borderRadius = '100vw';
+				divImg.style.backgroundSize = 'cover';
 				divImg.style.backgroundRepeat = 'no-repeat';
 				divImg.style.display = 'inline-block';
 				divImg.style.padding = 'auto';
@@ -511,7 +513,7 @@ Astro Planets
 				divImg.style.textAlign = textAlign;
 				const pHeader = document.createElement('p');
 				pHeader.style.font = (0.2 * sizeVw / 3) + 'vw sans-serif';
-				pHeader.style.color = 'grey';
+				//pHeader.style.color = 'grey';
 				pHeader.textContent = header.toUpperCase();
 				pHeader.style.width = (2 * sizeVw / 3) + 'vw';
 				pHeader.style.textAlign = textAlign;
@@ -527,7 +529,7 @@ Astro Planets
 				divTextSmall.style.margin = 'auto';
 				divTextSmall.textContent = 'sample text '.repeat(20) + '...';
 				divTextSmall.style.font = '2vw sans-serif';
-				divTextSmall.style.color = 'grey';
+				//divTextSmall.style.color = 'grey';
 				if (textAlign === 'left') {
 					div.appendChild(divImg);
 					div.appendChild(pHeader);
