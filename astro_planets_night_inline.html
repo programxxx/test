@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Astro Planets
+</title>
+</head>
+<body>
+<script>
+;(() => {
+	'use strict';
+	document.body.innerHTML = '';
+	document.body.style.background = 'linear-gradient(to bottom, rgb(0,20,60), rgb(50,0,100))';
+	//document.body.style.backgroundImage = 'url(https://adventure.com/wp-content/uploads/2017/12/Hero-GBI-Dark-Sky-Mark-Russell-7-1920x1080.jpg)';
+	//document.body.style.backgroundSize = 'cover';
+	//document.body.style.backgroundPosition = 'center';
+	//document.body.style.backgroundRepeat = 'no-repeat';
+	document.body.style.textAlign = 'center';
+	document.body.style.margin = '0px';
+	document.body.style.padding = '0px';
+	const div = document.createElement('div');
+	div.style.textAlign = 'center';
+	//div.style.backgroundImage = 'url(https://adventure.com/wp-content/uploads/2017/12/Hero-GBI-Dark-Sky-Mark-Russell-7-1920x1080.jpg)';
+	//div.style.backgroundImage = 'url(http://lamcdn.net/lookatme.ru/post_image-image/oOrq5QlDKnKWKdy8dhuznQ-wide.jpg)';
+	//div.style.backgroundImage = 'url(http://cdn.eso.org/images/screen/beletsky_lasilla_28.jpg)';
+	//div.style.backgroundImage = 'url(https://i.imgur.com/vy9QatI.jpg)';
+	//div.style.backgroundImage = 'url(http://view-photo.ru/wp-content/uploads/2015/11/DSC09372.jpg)';
+	//div.style.backgroundImage = 'url(https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2018/universe.jpg)';
+	div.style.backgroundImage = 'url(astro1.png)';
+	div.style.backgroundSize = 'auto';
+	div.style.backgroundPosition = 'center bottom';
+	div.style.backgroundRepeat = 'repeat';
+	div.style.backgroundClip = 'border-box';
+	div.style.margin = '0px';
+	div.style.padding = '0px';
+	document.body.appendChild(div);
+	/*
+	const divBlack = document.createElement('div');
+	divBlack.style.height = '0px';
+	//divBlack.style.background = 'rgb(0,0,0)';
+	divBlack.style.background = 'linear-gradient(to bottom, rgb(0,10,50), rgb(0,0,0))';
+	//divBlack.style.backgroundImage = 'url(https://uploads-ssl.webflow.com/5b227a6bd898e25ae5ce18af/5c4b5223d9b96fe8c6be76a9_overheard-in-product.jpg)';
+	divBlack.style.backgroundPosition = 'center center';
+	divBlack.style.margin = 0;
+	divBlack.style.padding = '5%';
+	divBlack.style.width  = '100%';
+	divBlack.style.display = 'inline-block';
+	divBlack.style.textAlign = 'center';
+	document.body.appendChild(divBlack);
+	const divWhite = document.createElement('div');
+	divWhite.style.height = '0px';
+	divWhite.style.background = 'rgb(200,200,200)';
+	//divWhite.style.backgroundImage = 'url(https://cdn.shopify.com/s/files/1/0806/5321/products/STARS-WALLPAPER_1024x1024.jpg?v=1507585728';
+	divWhite.style.backgroundImage = 'url(https://s3.amazonaws.com/spoonflower/public/design_thumbnails/0158/4623/rstars_grey_mirror.png)';
+	//divWhite.style.background = 'linear-gradient(to bottom, rgb(0,0,0), rgb(0,50,255), rgb(255,255,255))';
+	divWhite.style.backgroundRepeat = 'repeat';
+	//divWhite.style.backgroundSize = '500px';
+	divWhite.style.margin = 0;
+	divWhite.style.padding = '5%'; 
+	divWhite.style.width  = '100%';
+	divWhite.style.display = 'inline-block';
+	divWhite.style.textAlign = 'center';
+	document.body.appendChild(divWhite);
+	*/
+	//document.body.backgroundPosition = 'center center';
+	const canvas = document.createElement('canvas');
+	/*const testObj = {name: 'star', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.02, satelites: [
+		{name: 'planetA', color: Math.random() * 360, size: 0.03, distance: 0.2, angle: 0, speed: 0.003, selfAngle: 0, selfSpeed: 0.03, satelites: [
+			{name: 'moonA1', color: Math.random() * 360, size: 0.01, distance: 0.05, angle: 0, speed: 0.01, selfAngle: 0, selfSpeed: 0.04,  satelites: [
+				{name: 'moonA1a', color: Math.random() * 360, size: 0.003, distance: 0.02, angle: 0, speed: 0.025, selfAngle: 0, selfSpeed: 0.05, satelites: []}
+			]},
+			{name: 'moonA2', color: Math.random() * 360, size: 0.01, distance: 0.09, angle: 0, speed: 0.005, selfAngle: 0, selfSpeed: 0.03, satelites: []}
+		]},
+		{name: 'planetB', color: Math.random() * 360, size: 0.02, distance: 0.3, angle: 0, speed: 0.001, selfAngle: 0, selfSpeed: 0.04, satelites: [
+			{name: 'moonA1', color: Math.random() * 360, size: 0.008, distance: 0.1, angle: 0, speed: 0.004, selfAngle: 0, selfSpeed: 0.05, satelites: []}
+		]}
+	]};*/
+	const generateSatelites = (nameOfParent, depth, numberSatelitesMin, numberSatelitesMax, etalon, divisor) => {
+		const arr = [];
+		if (depth <= 0) { return arr; }
+		let distance = etalon;
+		for (let i = 0, imax = Math.round(numberSatelitesMin + Math.random() * (numberSatelitesMax - numberSatelitesMin)); i < imax; i++) {
+			const name = nameOfParent + '_' + String.fromCharCode(i + 65);
+			const color = Math.random() * 360;
+			//const size = 0.5 * etalon * (sizeMin + Math.random() * (sizeMax - sizeMin)) / (i + 1);
+			const size = 0.8 * Math.pow(etalon, 0.9) / (i + 2)  * ((Math.random() - 0.5) * 0.15 + 1);
+			distance += 2 * etalon / imax * ((Math.random() - 0.5) * 0.25 + 1);
+			const angle = i * (1 / imax) + Math.random() / imax;
+			const speed = 0.0001 / (i + 2) / Math.pow(etalon, 1.05);
+			const selfAngle = Math.random();
+			const selfSpeed = ((Math.random() - 0.5) * 0.5 + 1) * 0.002 / Math.pow(etalon, 0.8);
+			const satelites = generateSatelites(name, depth - 1, numberSatelitesMin - 1, numberSatelitesMax - Math.random() * 1.2, etalon * divisor, divisor);
+			arr.push({name: name, color: color, size: size, distance: distance, angle: angle, speed: speed, selfAngle: selfAngle, selfSpeed: selfSpeed, satelites: satelites});
+		}
+		return arr;
+	};
+	const polarToDec = (cx, cy, distance, angle) => {
+		//if (angle > 1) { angle = angle - Math.floor(angle); }
+		angle = 2 * Math.PI * angle;
+		const x = cx + distance * Math.cos(angle);
+		const y = cy + distance * Math.sin(angle);
+		return [x, y];
+	};
+	const run = (obj, x, y, drawFunction, stringCount, rowAllow) => {
+		const [objX, objY] = polarToDec(x, y, obj.distance, obj.angle);
+		let shadowExcentrisity = 0.5;
+		if (obj.distance === 0) { shadowExcentrisity = 0.1; }
+		const [selfRotationX, selfRotationY] = polarToDec(objX, objY, obj.size * shadowExcentrisity, obj.selfAngle);
+		drawFunction(objX, objY, obj.size, x, y, obj.distance, selfRotationX, selfRotationY, obj.distance, obj.color, obj.name, stringCount, obj.angle, obj.selfAngle, rowAllow);
+		if (obj.satelites && obj.satelites.length > 0) {
+			for (let i = 0, imax = obj.satelites.length; i < imax; i++) {
+				stringCount = run(obj.satelites[i], objX, objY, drawFunction, stringCount + 1, rowAllow);
+			}
+		}
+		let angle = obj.angle;
+		angle += obj.speed;
+		if (angle > 1) { angle = angle - Math.floor(angle); }
+		obj.angle = angle;
+		let selfAngle = obj.selfAngle;
+		selfAngle += obj.selfSpeed;
+		if (selfAngle > 1) { selfAngle = selfAngle - Math.floor(selfAngle); }
+		obj.selfAngle = selfAngle;
+		return stringCount;
+	};
+	const createDrawFunction = (ctx, width, height)  => {
+		const size = Math.min(width, height)
+		return (x, y, objectRadius, cx, cy, orbisRadius, selfRotationX, selfRotationY, distance, color, name, stringCount, angle, selfAngle, rowAllow) => {
+			const colorDark = 'hsl(' + color + ',50%,15%)';
+			const colorBright = 'hsl(' + color + ',100%,70%)';
+			ctx.beginPath();
+			ctx.arc(cx * width, cy * height, size * orbisRadius, 0, 2 * Math.PI, false);
+			ctx.stroke();
+			const center = 0.5;
+			distance = distance < 0.01 ? objectRadius : distance;
+			let distanceCoeff = objectRadius / distance;
+			let distance1 = Math.sqrt((center - x) * (center - x) + (center - y) * (center - y));
+			distance1 = distance1 < objectRadius ? objectRadius : distance1;
+			distanceCoeff = 0.7 * objectRadius / distance1;
+			let selfRotationDarkness = '0.5';
+			if (x === center && y === center) {
+				if (rowAllow > stringCount) {
+					ctx.fillStyle = 'rgb(100,255,100)';
+					ctx.fillText(name + 'distance 0.0 angle 0.0 rotation ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025);
+				}
+				const radialGradient1 = ctx.createRadialGradient(width * x, height * x, size * objectRadius * 0.5, width * x, height * y, size * objectRadius * 1.5);
+				radialGradient1.addColorStop(0.5, 'hsla(' + color + ',100%,50%,1)');
+				radialGradient1.addColorStop(1, 'hsla(' + color + ',100%,50%,0)');
+				ctx.fillStyle = radialGradient1;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius * 1.5, 0, 2 * Math.PI, false);
+				ctx.fill();
+				ctx.fillStyle = 'hsl(' + color + ',100%,50%)';
+				selfRotationDarkness = '0.4';
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				const radialGradient = ctx.createRadialGradient(width * selfRotationX, height * selfRotationY, size * objectRadius * 0.5, width * x, height * y, size * objectRadius);
+				radialGradient.addColorStop(0, 'rgba(255,0,0,' + selfRotationDarkness + ')');
+				radialGradient.addColorStop(1, 'rgba(255,0,0,0)');
+				ctx.fillStyle = radialGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+			} else {
+				if (rowAllow > stringCount) {
+					//ctx.fillStyle = 'rgb(100,255,100)';
+					//ctx.fillText(name  + ' '.repeat(7 - name.length) +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025 + stringCount * height * 0.015);
+					ctx.fillStyle = 'rgb(100,255,100)';
+					ctx.fillText(name  + ' '.repeat(7 - name.length) +  ' D: ' + (distance1 * width).toString().substring(0,7) + ' A: ' + angle.toString().substring(0,7) + ' R: ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025 + stringCount * height * 0.015);
+				}
+				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
+				linearGradient.addColorStop(0, colorDark);
+				linearGradient.addColorStop(distanceCoeff, colorBright);
+				ctx.fillStyle = linearGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				const radialGradient = ctx.createRadialGradient(width * selfRotationX, height * selfRotationY, size * objectRadius * 0.5, width * x, height * y, size * objectRadius);
+				radialGradient.addColorStop(0, 'rgba(0,0,0,' + selfRotationDarkness + ')');
+				radialGradient.addColorStop(1, 'rgba(0,0,0,0)');
+				ctx.fillStyle = radialGradient;
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, size * objectRadius, 0, 2 * Math.PI, false);
+				ctx.fill();
+				/*ctx.fillStyle = 'white';
+				ctx.beginPath();
+				ctx.arc((center + (x - center) * (1 - distanceCoeff)) * width, (center + (y - center) * (1 - distanceCoeff)) * height, size * objectRadius * 0.5, 0, 2 * Math.PI, false);
+				ctx.fill();*/
+				ctx.beginPath();
+				ctx.moveTo(x * width, y * height);
+				ctx.lineTo(cx * width, cy * height);
+				ctx.stroke();
+			}	
+		};
+	};
+	const createOscillatorDrawer = (ctx, width, height) => {
+		ctx.fillStyle = 'black';
+		let a0 = Math.random() * 0.5 + 0.5, a1 = Math.random() * 0.5 + 0.5, b0 = Math.random() * 0.5 + 0.5, b1 = Math.random() * 0.5 + 0.5, c0 = Math.random() * 0.5 + 0.5, c1 = Math.random() * 0.5 + 0.5;
+		let start0 = Math.random() * width, start1 = Math.random() * width, start2 = Math.random() * width; 
+		let position = 0;
+		return () => {
+			ctx.clearRect(position, 0, 5, height);
+			const y0 = (0.5 + (Math.sin(0.07 * a0 * (position + start0)) + Math.cos(0.1 * a1 * (position + start0))) / 4) * height;
+			const y1 = (0.5 + (Math.sin(0.07 * b0 * (position + start1)) + Math.cos(0.1 * b1 * (position + start1))) / 4 + 0.3) * height * 0.7;
+			const y2 = (0.5 + (Math.sin(0.07 * c0 * (position + start2)) + Math.cos(0.1 * c1 * (position + start2))) / 4 + 0.6) * height * 0.4;
+			ctx.fillStyle = 'rgb(255,0,0)';
+			ctx.fillRect(position, y0, width * 0.006, width * 0.006);
+			ctx.fillStyle = 'rgb(100,255,100)';
+			ctx.fillRect(position, y1, width * 0.006, width * 0.006);
+			ctx.fillRect(position + 5, 0, width * 0.0015, height);
+			ctx.fillStyle = 'rgb(50,50,255)';
+			ctx.fillRect(position, y2, width * 0.006, width * 0.006);
+			position += 1;
+			if (position > width) { 
+				position = 0;
+				a0 = Math.random() * 0.5 + 0.5, a1 = Math.random() * 0.5 + 0.5, b0 = Math.random() * 0.5 + 0.5, b1 = Math.random() * 0.5 + 0.5, c0 = Math.random() * 0.5 + 0.5, c1 = Math.random() * 0.5 + 0.5;
+				start0 = Math.random() * width, start1 = Math.random() * width, start2 = Math.random() * width;
+			}
+		};
+	};
+	let interval = undefined;
+	let pre = undefined;
+	const printText = stringToPrint => {
+		const preToRemove = div.getElementsByTagName('pre')[0];
+		if (preToRemove) {
+			preToRemove.parentNode.removeChild(preToRemove);
+		}
+		clearInterval(interval);
+		const printTextMotion = (container, text) => {
+			//let interval = undefined; // global interval
+				(() => {
+					return new Promise((resolve, reject) => {
+						const maxLettersAllow = text.length + 1;
+						let lettersAllow = 0;
+						let interval = undefined;
+						const f = () => {
+							const str = text.substring(0, lettersAllow) + '_';
+							container.textContent = str;
+							if (lettersAllow < maxLettersAllow) {
+								lettersAllow++;
+							} else {
+								clearInterval(interval);
+								resolve();
+							}
+						};
+						interval = setInterval(f, 100);
+					});
+				})().then(() => {
+					return new Promise((resolve, reject) => {
+						const maxTicks = 9999;
+						let tick = 0;
+						let showCursor = false;
+						let interval= undefined;
+						const f = () => {
+							let cursorStr = ' ';
+							if (showCursor) {
+								cursorStr = '_';
+							}
+							tick++;
+							showCursor = !showCursor;
+							if (tick >= maxTicks) {
+								container.textContent = text;
+								clearInterval(interval);
+								resolve();
+							} else {
+								const str = text + cursorStr;
+								container.textContent = str;
+							}
+						};
+						interval = setInterval(f, 300);
+					});
+				});
+		};
+		//const pre = document.createElement('pre');
+		pre = document.createElement('pre'); // global
+		pre.style.textAlign = 'center';
+		const canvasRect = canvas.getBoundingClientRect();
+		pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
+		pre.style.top = (canvasRect.height * 0.85) + 'px';//(canvasRect.height * 0.72) + 'px';// '72vh';
+		pre.style.font = (canvasRect.width * 0.048) + 'px sans-serif';
+		pre.style.textAlign = 'left';
+		//pre.style.backgroundColor = 'red';
+		pre.style.position = 'absolute';
+		pre.style.color = 'rgba(180,255,150,0.65)';
+		div.appendChild(pre);
+		printTextMotion(pre, stringToPrint);
+	};
+	let animationFrame = undefined;
+	let checkIntervalScroll = undefined;
+	let intervalPrintText = undefined;
+	const onresize = (width, height) => {
+		if (width > 1080) {
+			width = height = 1080;
+		} else if (width < 600) {
+			width = height = 600;
+		}
+		const canvas1 = document.createElement('canvas');
+		canvas1.width = width / 2;
+		canvas1.height = height / 4;
+		const ctx1 = canvas1.getContext('2d');
+		canvas.width = width;
+		canvas.height = height;
+		const ctx = canvas.getContext('2d');
+		cancelAnimationFrame(animationFrame);
+		const drawFunction = createDrawFunction(ctx, width, height);
+		ctx.setLineDash([width / 300, width / 150]);
+		ctx.strokeStyle = 'white';
+		ctx.lineWidth = width / 400; // 2
+		const testObj1 = {name: '_', color: 50, size: 0.07, distance: 0, angle: 0, speed: 0, selfAngle: 0, selfSpeed: 0.01,
+			satelites: generateSatelites('_', 3, 3, 3, 0.11, 0.35)
+		};
+		ctx.font = (0.016 * width) + 'px monospace';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'top';
+		const oscillatorDrawer = createOscillatorDrawer(ctx1, canvas1.width, canvas1.height);
+		let frameRowAllow = 0, rowAllow = 0;
+		const frameStepRowAllow = 7, maxRowAllow = 100;
+		const animate = () => {
+			//ctx.fillStyle = 'black';
+			//ctx.fillStyle = 'rgb(100,100,200)';
+			//ctx.fillRect(0, 0, width, height);
+			ctx.clearRect(0, 0, width, height);
+			oscillatorDrawer();
+			ctx.drawImage(canvas1, width * 0.5, 0, canvas1.width, canvas1.height);
+			ctx.fillStyle = 'black';
+			run(testObj1, 0.5, 0.5, drawFunction, 0, rowAllow);
+			//console.log(str);
+			animationFrame = requestAnimationFrame(animate);
+			frameRowAllow++;
+			if (frameRowAllow === frameStepRowAllow) {
+				if (rowAllow < maxRowAllow) {
+					rowAllow++;
+				}
+				frameRowAllow = 0;
+			}
+		};
+		let animationCancelledOnScroll = false;
+		const scrollCheck = () => {
+			const canvasRect = canvas.getBoundingClientRect();
+			if (canvasRect.bottom < 0) {
+				if (!animationCancelledOnScroll) {
+					cancelAnimationFrame(animationFrame);
+					animationCancelledOnScroll = !animationCancelledOnScroll;
+				}
+			} else {
+				if (animationCancelledOnScroll) {
+					animationFrame = requestAnimationFrame(animate);
+					animationCancelledOnScroll = !animationCancelledOnScroll;
+				}
+			}
+		};
+		clearInterval(checkIntervalScroll);
+		checkIntervalScroll = setInterval(scrollCheck, 100);
+		animate();
+		let printCount = 0;
+		clearInterval(intervalPrintText);
+		const printTextFunc = () => {
+			if (printCount === 0) {
+				printText(new Date().toString().substring(0, 15));
+			} else if (printCount === 1) {
+				printText(new Date().toString().substring(16, 33));
+			} else if (printCount === 2) {
+				printText('STAR SYS processing OK');
+			} else if (printCount === 3) {
+				printText('Gravity coeff ' + ((Math.random() + Math.random() + Math.random()  + Math.random()  + Math.random()) / 5).toString(10).substring(0, 7));
+			} else if (printCount === 4) {
+				printText('Radiation level ' + (((((Math.random() + Math.random() + Math.random()  + Math.random()  + Math.random()) / 5) - 0.5) * 2 * 0.3 + 1) * 80).toString(10).substring(0, 5));
+			}
+			printCount++;
+			if (printCount > 4) {
+				printCount = 0;
+			}
+		};
+		intervalPrintText = setInterval(printTextFunc, 8000);
+		printTextFunc();
+	};
+	let oldSize = undefined;
+	const onresize1 = e => {
+		/*
+		//divBlack.style.height = ((window.innerHeight - Math.min(window.innerWidth, window.innerHeight)) + 200) + 'px';
+		divBlack.style.height = Math.floor(window.innerWidth * 0.05) + 'px';
+		const h1b = document.createElement('h1');
+		h1b.textContent = 'Реальная практическая астрология';//'Звезды знают ответы на вопросы';//'Звезды умеют отвечать на вопросы';
+		h1b.style.font = (window.innerWidth * 0.05) + 'px sans-serif';
+		h1b.style.color = 'rgb(180,180,255)';
+		h1b.style.margin = '0%';
+		divBlack.innerHTML = '';
+		divBlack.appendChild(h1b);
+		divWhite.style.height = Math.floor(window.innerWidth * 0.05) + 'px';
+		const h1w = document.createElement('h1');
+		h1w.textContent = 'На каждый вопрос есть ответ';//'Надо лишь уметь их задавать';
+		h1w.style.font = (window.innerWidth * 0.05) + 'px sans-serif';
+		h1w.style.color = 'black';
+		h1w.style.margin = '0%';
+		divWhite.innerHTML = '';
+		divWhite.appendChild(h1w);
+		*/
+		if (pre) {
+			const canvasRect = canvas.getBoundingClientRect();
+			pre.style.left = (canvasRect.left + canvasRect.width * 0.05) + 'px';
+		}
+		let resizeIt = false;
+		const newSize = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.95);
+		if (oldSize) {
+			if (1 - Math.min(newSize, oldSize) / Math.max(newSize, oldSize) > 0.25) {
+				resizeIt = true;
+				oldSize = newSize;
+			}
+		} else {
+			oldSize = newSize;
+		}
+		if (e && e.type === 'click') {
+			resizeIt = true;
+		}
+		if (e === 'do it!') {
+			resizeIt = true;
+		}
+		if (resizeIt) {
+			onresize(newSize, newSize);
+		}
+		//onresize(1000, 1000);
+	};
+	window.addEventListener('resize', onresize1);
+	canvas.addEventListener('click', onresize1);
+	div.appendChild(canvas);
+	onresize1('do it!');
+	(() => {
+		/*const divBlack = document.createElement('div');
+		divBlack.style.height = '100px';
+		divBlack.style.background = 'black';
+		document.body.appendChild(divBlack); */ // white stars on black background, balck stars on white backrgoung (moon, sun)
+		/*const divGradient = document.createElement('div');
+		divGradient.style.height = '100px';
+		divGradient.style.background = 'linear-gradient(to bottom, black, white)';
+		document.body.appendChild(divGradient);*/
+		const div = document.createElement('div');
+		div.style.margin = 0;
+		div.style.padding = 0;
+		div.style.height = 'auto';
+		div.style.background = 'white';
+		//div.style.borderRadius = '30vw';
+		document.body.appendChild(div);
+		;(() => {
+			'use strict';
+			const createRandomString = length => {
+				let str = '';
+				for (let i = 0; i < length; i++) {
+					if (Math.random() < 0.2) {
+						str += ' ';
+					} else {
+						str += String.fromCharCode(Math.floor(Math.random() * (122 - 97)) + 97);
+					}
+				}
+				return str;
+			};
+			const createDummy = (width, height) => {
+				const div = document.createElement('div');
+				div.style.width = width;
+				div.style.height = height;
+				div.style.display = 'block';
+				//div.style.background = 'yellow';
+				return div;
+			};
+			const createOnclick = (container, arrayStrings, width, font, container1, sizeVw, divTextSmall) => {
+				let clicked = false;
+				return e => {
+					//container.style.width = width * 1.33 + 'vw';
+					//container.style.width = '50%';
+					if (!clicked) {
+						divTextSmall.style.visibility = 'hidden';
+						//container1.style.width = sizeVw * 1.33 + 'vw';
+						arrayStrings.forEach(string => {
+							const p = document.createElement('p');
+							p.textContent = string;
+							p.style.font = font * 1.33 + 'vw sans-serif';
+							p.style.color = 'grey';
+							p.style.textAlign = 'center';
+							p.style.width = width;
+							container.appendChild(p);
+						});
+					} else {
+						divTextSmall.style.visibility = 'visible';
+						//container1.style.width = sizeVw + 'vw';
+						container.innerHTML = '';
+					}
+					clicked = !clicked;
+				};
+			};
+			const createParagraph = (imgUrl, header, sizeVw, arrayStrings, textAlign) => {
+				const div = document.createElement('div');
+				div.style.display = 'inline-block';
+				div.style.padding = 0;
+				div.style.margin = 0;
+				div.style.border = 0;
+				div.style.background = 'hsl(' + (Math.random() * 360) + ',35%,80%)';
+				div.style.textAlign = textAlign;
+				div.align = textAlign;
+				div.style.width = '100%';
+				div.style.height = 'auto';
+				const divImg = document.createElement('div');
+				divImg.style.backgroundImage = 'url(' + imgUrl + ')';
+				divImg.style.backgroundPosition = 'center center';
+				divImg.style.borderRadius = '100vw';//(sizeVw / 6) + 'vw';
+				divImg.style.backgroundSize = 'cover';(2 * sizeVw / 3) + 'vw';
+				divImg.style.backgroundRepeat = 'no-repeat';
+				divImg.style.display = 'inline-block';
+				divImg.style.padding = 'auto';
+				divImg.style.margin = '1vw';
+				divImg.style.width = '30%';
+				divImg.style.height = (2 * sizeVw / 3) + 'vw';
+				divImg.style.textAlign = textAlign;
+				const pHeader = document.createElement('p');
+				pHeader.style.font = (0.2 * sizeVw / 3) + 'vw sans-serif';
+				pHeader.style.color = 'grey';
+				pHeader.textContent = header.toUpperCase();
+				pHeader.style.width = (2 * sizeVw / 3) + 'vw';
+				pHeader.style.textAlign = textAlign;
+				pHeader.style.margin = 'auto';
+				pHeader.style.display = 'inline-block';
+				const divTextSmall = document.createElement('div');
+				divTextSmall.style.margin = 0;
+				divTextSmall.style.textAlign = 'center';
+				divTextSmall.style.display = 'inline-block';
+				divTextSmall.style.width = '30%';
+				divTextSmall.wordWrap = 'break-word';
+				divTextSmall.style.padding = 'auto';
+				divTextSmall.style.margin = 'auto';
+				divTextSmall.textContent = 'sample text '.repeat(20);
+				divTextSmall.style.font = '2vw sans-serif';
+				divTextSmall.style.color = 'grey';
+				if (textAlign === 'left') {
+					div.appendChild(divImg);
+					div.appendChild(pHeader);
+					div.appendChild(divTextSmall);
+				} else {
+					div.appendChild(divTextSmall);
+					div.appendChild(pHeader);
+					div.appendChild(divImg);
+				}
+				div.appendChild(createDummy((sizeVw * 0.02) + 'vw', (sizeVw * 0.02) + 'vw'));
+				const divText = document.createElement('div');
+				divText.style.margin = 0;
+				divText.style.textAlign = 'center';//textAlign === 'left' ? 'right' : 'left';
+				divText.style.display = 'inline-block';
+				//divText.style.background = 'yellow';
+				//divText.style.width = (2 * sizeVw / 3) + 'vw';
+				divText.style.width = '100%';
+				divText.wordWrap = 'break-word';
+				divText.style.padding = 'auto';
+				divText.style.margin = 'auto';
+				div.appendChild(divText);
+				div.appendChild(createDummy((sizeVw * 0.04) + 'vw', (sizeVw * 0.04) + 'vw'));
+				const onclickFunction = createOnclick(divText, arrayStrings, (2 * sizeVw / 3), (0.1 * sizeVw / 3), div, sizeVw, divTextSmall);
+				div.onclick = onclickFunction;
+				return div;
+			};
+			(container => {
+				const sizeVw = 50;
+				const dummyWidth = '3vw';
+				const dummyHeight = '3vw';
+				//container.appendChild(createDummy(dummyWidth, dummyHeight));
+				container.appendChild(createParagraph('http://trenirofka.ru/wp-content/uploads/2018/01/kak-nakachat-biceps.jpg', 'Прокачай Свои Планеты!', sizeVw, new Array(10).fill(0).map(() => createRandomString(100)), 'left'));
+				//container.appendChild(createDummy(dummyWidth, dummyHeight));
+				container.appendChild(createParagraph('https://www.nastroy.net/pic/images/post/726894-1524412839.jpg', 'Астрология Удачи', sizeVw, new Array(10).fill(0).map(() => createRandomString(100)), 'right'));
+				//container.appendChild(createDummy(dummyWidth, dummyHeight));
+				container.appendChild(createParagraph('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Broken_heart.svg/1250px-Broken_heart.svg.png', 'Астрология Любви и Отношений', sizeVw, new Array(10).fill(0).map(() => createRandomString(100)), 'left'));
+				//container.appendChild(createDummy(dummyWidth, dummyHeight));
+				container.appendChild(createParagraph('http://rzg.info.pl/wp-content/uploads/2018/05/2776_bbbt_124515.jpg', 'Астрология Карьеры и Бизнеса', sizeVw, new Array(10).fill(0).map(() => createRandomString(100)), 'right'));
+				//container.appendChild(createDummy(dummyWidth, dummyHeight));
+			})(div);
+		})();
+	})();
+})();
+;(container => {
+	'use strict';
+	container.innerHTML = '';
+	//container.style.background = 'url(https://cdn.pixabay.com/photo/2017/12/29/18/47/nature-3048299__340.jpg)';
+	//container.style.background = 'url(https://i.ytimg.com/vi/TZ6equRz3QA/maxresdefault.jpg)';
+	//container.style.background = 'url(https://ak8.picdn.net/shutterstock/videos/10628138/thumb/1.jpg)';
+	//container.style.background = 'url(https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2018/universe.jpg)';
+	container.style.backgroundImage = 'url(astro1.png)';
+	container.style.backgroundRepeat = 'repeat';
+	container.style.backgroundSize = 'auto';
+	container.style.backgroundPosition = 'center top';
+	const canvas = document.createElement('canvas');
+	container.appendChild(canvas);
+	const sizeMin = 0.01;
+	const sizeMax = 0.05;
+	const createNodes = n => {
+		return new Array(n).fill(0).map(() => {
+			return {
+				px: (Math.random() - 0.5) + 0.5,
+				py: (Math.random() - 0.5) + 0.5,
+				vx: (Math.random() * 0.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) * 0.001,
+				vy: (Math.random() * 0.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) * 0.001,
+				size: (Math.random() * (sizeMax - sizeMin) + sizeMin),
+				sizeChange: (Math.random() * 0.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) * 0.001,
+				angle: Math.random(),
+				rotation: (Math.random() * 0.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) * 0.005,
+				hue: Math.random() * 360,
+				hueChange: (Math.random() * 0.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) * 1,
+				rayNumber: 5
+			};
+		});
+	};
+	const motion = array => {
+		for (let i = 0, imax = array.length; i < imax; i++) {
+			const obj = array[i];
+			if (obj.px + obj.vx < 0 || obj.px + obj.vx > 1) { obj.vx = -obj.vx; }
+			if (obj.py + obj.vy < 0 || obj.py + obj.vy > 1) { obj.vy = -obj.vy; }
+			obj.px += obj.vx;
+			obj.py += obj.vy;
+			if (obj.size + obj.sizeChange < sizeMin || obj.size + obj.sizeChange > sizeMax) { obj.sizeChange = -obj.sizeChange; }
+			obj.size += obj.sizeChange;
+			obj.angle += obj.rotation;
+			if (obj.angle < 0) { obj.angle += 1; } else if (obj.angle > 1) { obj.angle -= 1; }
+			obj.hue += obj.hueChange;
+			if (obj.hue < 0) { obj.hue += 360; } else if (obj.hue > 360) { obj.hue -= 360; }
+		}
+	};
+	const drawStar = (ctx, width, height, px, py, size, angle, rayNumber, hue) => {
+		const canvasMin = Math.min(width, height);
+		/*ctx.beginPath();
+		ctx.arc(px * width, py * height, size * canvasMin, 0, 2 * Math.PI, false);
+		ctx.globalCompositeOperation = 'destination-out';
+		ctx.fill();
+		ctx.globalCompositeOperation = 'source-over';*/
+		ctx.fillStyle = 'hsl(' + hue + ',100%,50%)';
+		ctx.beginPath();
+		ctx.arc(px * width, py * height, 0.25 * size * canvasMin, 0, 2 * Math.PI, false);
+		ctx.fill();
+		/*for (let i = 0, angleStart = 2 * Math.PI * angle, angleStep = Math.PI / rayNumber, imax = 2 * rayNumber, localStarSize, command; i < imax; i++) {
+			if (i % 2) { localStarSize = size * 0.5; } else { localStarSize = size; }
+			//ctx.beginPath();
+			//ctx.arc(px * width + localStarSize * Math.cos(angleStart + i * angleStep) * canvasMin, py * height + localStarSize * Math.sin(angleStart + i * angleStep) * canvasMin, size * 0.1 * canvasMin, 0, 2 * Math.PI, false);
+			//ctx.fill();
+			if (i === 0) {
+				ctx.moveTo(px * width + localStarSize * Math.cos(angleStart + i * angleStep) * canvasMin, py * height + localStarSize * Math.sin(angleStart + i * angleStep) * canvasMin);
+			} else {
+				ctx.lineTo(px * width + localStarSize * Math.cos(angleStart + i * angleStep) * canvasMin, py * height + localStarSize * Math.sin(angleStart + i * angleStep) * canvasMin);
+			}
+		}
+		ctx.closePath();*/
+		ctx.fill();
+	};
+	const drawStars = (ctx, width, height, array) => {
+		for (let i = 0, imax = array.length; i < imax; i++) {
+			const obj = array[i];
+			drawStar(ctx, width, height, obj.px, obj.py, obj.size, obj.angle, obj.rayNumber, obj.hue);
+		}
+	};
+	const drawLines = (ctx, width, height, array) => {
+		const canvasMin = Math.min(width, height);
+		for (let i = 0, imax = array.length; i < imax; i++) {
+			const xi = array[i].px;
+			const yi = array[i].py;
+			const huei = array[i].hue;
+			for (let j = 0, jmax = array.length; j < jmax; j++) {
+				if (i === j) { continue; }
+				const xj = array[j].px;
+				const yj = array[j].py;
+				const huej = array[j].hue;
+				const distance = Math.sqrt((xi - xj) * (xi - xj) + (yi - yj) * (yi - yj));
+				let lineWidth = 0.2 - distance;
+				if (lineWidth < 0) { lineWidth = 0; }
+				if (lineWidth > 0) {
+					const gradient = ctx.createLinearGradient(xi * width, yi * height, xj * width, yj * height);
+					gradient.addColorStop(0, 'hsl(' + huei + ',100%,50%');
+					gradient.addColorStop(1, 'hsl(' + huej + ',100%,50%');
+					ctx.strokeStyle = gradient;
+					ctx.lineWidth = 0.03 * canvasMin * lineWidth;
+					ctx.beginPath();
+					ctx.moveTo(xi * width, yi * height);
+					ctx.lineTo(xj * width, yj * height);
+					ctx.stroke();
+				}
+			}
+		}
+	};
+	let animationFrame = undefined;
+	const createAnimateFunction = (ctx, width, height, array) => {
+		const f = () => {
+			/*ctx.fillStyle = color1;
+			ctx.fillRect(0, 0, width, height);
+			ctx.fillStyle = color2;
+			ctx.beginPath();
+			ctx.arc(Math.random() * width, Math.random() * height, Math.min(width, height) * 0.1, 0, 2 * Math.PI, false);
+			ctx.globalCompositeOperation = 'destination-out';
+			ctx.fill();
+			ctx.globalCompositeOperation = 'source-over';*/
+			ctx.clearRect(0, 0, width, height);
+			drawLines(ctx, width, height, array);
+			drawStars(ctx, width, height, array);
+			motion(array);
+			animationFrame = requestAnimationFrame(f);
+		};
+		return f;
+	};
+	let checkIntervalScroll = undefined;
+	const onresize = (width, height) => {
+		canvas.width = width;
+		canvas.height = height;
+		const ctx = canvas.getContext('2d');
+		cancelAnimationFrame(animationFrame);
+		const animate = createAnimateFunction(ctx, width, height, createNodes(50));
+		let animationCancelledOnScroll = false;
+		const scrollCheck = () => {
+			const canvasRect = canvas.getBoundingClientRect();
+			if (canvasRect.bottom < 0 || canvasRect.top > window.innerHeight) {
+				if (!animationCancelledOnScroll) {
+					cancelAnimationFrame(animationFrame);
+					animationCancelledOnScroll = !animationCancelledOnScroll;
+				}
+			} else {
+				if (animationCancelledOnScroll) {
+					animationFrame = requestAnimationFrame(animate);
+					animationCancelledOnScroll = !animationCancelledOnScroll;
+				}
+			}
+		};
+		clearInterval(checkIntervalScroll);
+		checkIntervalScroll = setInterval(scrollCheck, 100);
+		animate();
+		//drawStar(ctx, width, height, 0.5, 0.5, 0.5, 0.1, 5);
+	};
+	let oldWidth = window.innerWidth;
+	let oldHeight = window.innerHeight;
+	const onresize1 = () => {
+		const newWidth = window.innerWidth;
+		const newHeight = window.innerHeight;
+		if (Math.min(oldWidth, newWidth) / Math.max(oldWidth, newWidth) < 0.9 || Math.min(oldHeight, newHeight) / Math.max(oldHeight, newHeight) < 0.9) {
+			oldWidth = newWidth;
+			oldHeight = newHeight;
+			//onresize(newWidth * 0.95, newHeight * 0.95);
+			onresize(Math.floor(newWidth * 0.95), Math.floor(0.66 * newWidth));
+		}
+	}
+	window.addEventListener('resize', onresize1);
+	onresize(Math.floor(window.innerWidth * 0.95), Math.floor(window.innerWidth * 0.66));
+})((() => {
+	'use strict';
+	const div = document.createElement('div');
+	div.style.display = 'block';
+	div.style.width = div.style.height = 'auto';
+	div.style.textAlign = 'center';
+	document.body.appendChild(div);
+	return div;
+})());
+</script>
+</body>
+</html>
