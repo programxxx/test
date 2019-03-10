@@ -447,7 +447,7 @@ Astro Planets
 			const minSize = Math.min(window.innerWidth, window.innerHeight);
 			const maxSize = Math.max(window.innerWidth, window.innerHeight);
 			div.style.top = Math.floor(minSize * 0.35) + 'px';
-			div.style.left = Math.floor((window.innerWidth - minSize) / 2) + 'px';
+			div.style.left = Math.floor((window.innerWidth - minSize) / 2 + minSize * 0.05) + 'px';
 			h1.style.font = minSize / 15 + 'px sans-serif';
 			h1.style.borderRadius = minSize / 30 + 'px';
 			h1.style.width = Math.floor(minSize * 0.95) + 'px';
