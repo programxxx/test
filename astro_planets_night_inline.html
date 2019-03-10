@@ -432,6 +432,8 @@ Astro Planets
 		div.style.position = 'absolute';
 		div.style.display = 'block';
 		div.style.textAlign = 'center';
+		div.style.margin = 0;
+		div.style.padding = 0;
 		container.appendChild(div);
 		const h1 = document.createElement('h1');
 		h1.style.color = 'white';
@@ -446,13 +448,25 @@ Astro Planets
 		const onresize = () => {
 			const minSize = Math.min(window.innerWidth, window.innerHeight);
 			const maxSize = Math.max(window.innerWidth, window.innerHeight);
-			div.style.top = Math.floor(minSize * 0.35) + 'px';
-			div.style.left = Math.floor((window.innerWidth - minSize) / 2 + minSize * 0.03) + 'px';
-			h1.style.font = minSize / 15 + 'px sans-serif';
-			h1.style.borderRadius = minSize / 30 + 'px';
-			h1.style.width = Math.floor(minSize * 0.95) + 'px';
-			p.style.font = minSize / 30 + 'px sans-serif';
-			p.style.width = Math.floor(minSize * 0.95)+ 'px';
+			if (window.innerWidth <= window.innerHeight) {
+				div.style.top = Math.floor(minSize * 0.35) + 'px';
+				div.style.left = Math.floor((window.innerWidth - minSize) / 2 + minSize * 0.03) + 'px';
+				h1.style.font = minSize / 15 + 'px sans-serif';
+				h1.style.borderRadius = minSize / 30 + 'px';
+				h1.style.width = Math.floor(minSize * 0.95) + 'px';
+				p.style.font = minSize / 30 + 'px sans-serif';
+				p.style.width = Math.floor(minSize * 0.95)+ 'px';
+			} else {
+				div.style.top = Math.floor(minSize * 0.35) + 'px';
+				//div.style.left = Math.floor((window.innerWidth - minSize) / 2 + minSize * 0.03) + 'px';
+				div.style.left = Math.floor(maxSize * 0.15) + 'px';
+				h1.style.font = minSize / 10 + 'px sans-serif';
+				h1.style.borderRadius = minSize / 20 + 'px';
+				h1.style.width = Math.floor(maxSize * 0.7) + 'px';
+				p.style.font = minSize / 20 + 'px sans-serif';
+				p.style.width = Math.floor(minSize * 0.95)+ 'px';
+				p.style.width = Math.floor(maxSize * 0.7) + 'px';
+			}
 		};
 		window.addEventListener('resize', onresize);
 		onresize();
