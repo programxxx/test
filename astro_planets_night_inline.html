@@ -141,7 +141,7 @@ Astro Planets
 			let selfRotationDarkness = '0.5';
 			if (x === center && y === center) {
 				if (rowAllow > stringCount) {
-					ctx.fillStyle = 'rgb(100,255,100)';
+					ctx.fillStyle = 'rgb(200,200,255)';
 					ctx.fillText(name + 'distance 0.0 angle 0.0 rotation ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025);
 				}
 				const radialGradient1 = ctx.createRadialGradient(width * x, height * x, size * objectRadius * 0.5, width * x, height * y, size * objectRadius * 1.5);
@@ -167,7 +167,7 @@ Astro Planets
 				if (rowAllow > stringCount) {
 					//ctx.fillStyle = 'rgb(100,255,100)';
 					//ctx.fillText(name  + ' '.repeat(7 - name.length) +  ' distance ' + (distance1 * width).toString().substring(0,7) + ' angle ' + angle.toString().substring(0,7) + ' rotation ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025 + stringCount * height * 0.015);
-					ctx.fillStyle = 'rgb(100,255,100)';
+					ctx.fillStyle = 'rgb(200,200,255)';
 					ctx.fillText(name  + ' '.repeat(7 - name.length) +  ' D: ' + (distance1 * width).toString().substring(0,7) + ' A: ' + angle.toString().substring(0,7) + ' R: ' + selfAngle.toString().substring(0,7), width * 0.025, height * 0.025 + stringCount * height * 0.015);
 				}
 				const linearGradient = ctx.createLinearGradient(x * width, y * height, center * width, center * height);
@@ -283,7 +283,8 @@ Astro Planets
 		pre.style.textAlign = 'left';
 		//pre.style.backgroundColor = 'red';
 		pre.style.position = 'absolute';
-		pre.style.color = 'rgba(180,255,150,0.65)';
+		//pre.style.color = 'rgba(180,255,150,0.65)';
+		pre.style.color = 'rgba(200,200,255,0.65)';
 		div.appendChild(pre);
 		printTextMotion(pre, stringToPrint);
 	};
@@ -436,13 +437,12 @@ Astro Planets
 		div.style.padding = 0;
 		container.appendChild(div);
 		const h1 = document.createElement('h1');
-		h1.style.color = 'white';
-		h1.style.backgroundColor = 'rgba(255,255,255,0.5)';
+		h1.style.color = 'rgb(220,220,255)';
+		h1.style.backgroundColor = 'rgba(255,255,255,0.4)';
 		h1.textContent = 'HEADER SUPER SITE';
-		h1.style.font = '20px sans-serif';
 		div.appendChild(h1);
 		const p = document.createElement('p');
-		p.style.color = 'white';
+		p.style.color = 'rgb(220,220,220)';
 		p.textContent = 'This super site is so awsome, that we cannot stop cuming by watching this incredible animation!';
 		div.appendChild(p);
 		const onresize = () => {
