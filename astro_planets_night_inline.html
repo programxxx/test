@@ -709,10 +709,12 @@ Astro Planets
 				let lineWidth = 0.2 - distance;
 				if (lineWidth < 0) { lineWidth = 0; }
 				ctx.lineWidth = 0.03 * canvasMin * lineWidth * 2;
-				ctx.beginPath();
-				ctx.moveTo(obj.px * width, obj.py * height);
-				ctx.lineTo(objDest.px * width, objDest.py * height);
-				ctx.stroke();
+				if (lineWidth > 0) {
+					ctx.beginPath();
+					ctx.moveTo(obj.px * width, obj.py * height);
+					ctx.lineTo(objDest.px * width, objDest.py * height);
+					ctx.stroke();
+				}
 				obj.impulseCurrentStep++;
 				if (obj.impulseCurrentStep === impulseSteps) {
 					obj.impulseCurrentStep = 0;
