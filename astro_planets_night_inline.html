@@ -723,14 +723,18 @@ Astro Planets
 			}
 		}
 	};
-	const drawStar = (ctx, width, height, px, py, size, angle, rayNumber, hue) => {
+	const drawStar = (ctx, width, height, px, py, size, angle, rayNumber, hue, impulseStarted) => {
 		const canvasMin = Math.min(width, height);
 		/*ctx.beginPath();
 		ctx.arc(px * width, py * height, size * canvasMin, 0, 2 * Math.PI, false);
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.fill();
 		ctx.globalCompositeOperation = 'source-over';*/
-		ctx.fillStyle = 'hsl(' + hue + ',100%,50%)';
+		if (impulseStarted) {
+			ctx.fillStyle = 'hsl(' + hue + ',100%,75%)';
+		} else {
+			ctx.fillStyle = 'hsl(' + hue + ',100%,50%)';
+		}
 		ctx.beginPath();
 		ctx.arc(px * width, py * height, 0.25 * size * canvasMin, 0, 2 * Math.PI, false);
 		ctx.fill();
@@ -751,7 +755,7 @@ Astro Planets
 	const drawStars = (ctx, width, height, array) => {
 		for (let i = 0, imax = array.length; i < imax; i++) {
 			const obj = array[i];
-			drawStar(ctx, width, height, obj.px, obj.py, obj.size, obj.angle, obj.rayNumber, obj.hue);
+			drawStar(ctx, width, height, obj.px, obj.py, obj.size, obj.angle, obj.rayNumber, obj.hue, obj.impulseStarted);
 		}
 	};
 	const drawLines = (ctx, width, height, array) => {
