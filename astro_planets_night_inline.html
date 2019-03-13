@@ -634,6 +634,7 @@ Astro Planets
 	//container.style.background = 'url(https://i.ytimg.com/vi/TZ6equRz3QA/maxresdefault.jpg)';
 	//container.style.background = 'url(https://ak8.picdn.net/shutterstock/videos/10628138/thumb/1.jpg)';
 	//container.style.background = 'url(https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2018/universe.jpg)';
+	container.style.backgroundColor = 'rgb(0,20,60)';
 	container.style.backgroundImage = 'url(universe.jpg)';
 	//container.style.backgroundImage = 'url(astro1.png)';
 	container.style.backgroundRepeat = 'no-repeat';
@@ -693,15 +694,15 @@ Astro Planets
 				ctx.fill();*/
 				const gradient = ctx.createLinearGradient(obj.px * width, obj.py * height, objDest.px * width, objDest.py * height);
 				if (obj.impulseCurrentStep > impulseTrace) {
-					gradient.addColorStop((obj.impulseCurrentStep + 1 - impulseTrace) / (impulseSteps + 2), 'rgba(255,255,255,0)');
+					gradient.addColorStop((obj.impulseCurrentStep + 1 - impulseTrace) / (impulseSteps + 2), 'rgba(200,200,255,0)');
 				} else {
-					gradient.addColorStop(0, 'rgba(255,255,255,0)');
+					gradient.addColorStop(0, 'rgba(200,200,255,0)');
 				}
-				gradient.addColorStop((obj.impulseCurrentStep + 1) / (impulseSteps + 2), 'rgba(255,255,255,1)');
+				gradient.addColorStop((obj.impulseCurrentStep + 1) / (impulseSteps + 2), 'rgba(200,200,255,1)');
 				if (obj.impulseCurrentStep < impulseSteps - impulseTrace) {
-					gradient.addColorStop((obj.impulseCurrentStep + impulseTrace) / (impulseSteps + 2), 'rgba(255,255,255,0)');
+					gradient.addColorStop((obj.impulseCurrentStep + impulseTrace) / (impulseSteps + 2), 'rgba(200,200,255,0)');
 				} else {
-					gradient.addColorStop(1, 'rgba(255,255,255,0)');
+					gradient.addColorStop(1, 'rgba(200,200,255,0)');
 				}
 				ctx.strokeStyle = gradient;
 				const distance = Math.sqrt((obj.px - objDest.px) * (obj.px - objDest.px) + (obj.py - objDest.py) * (obj.py - objDest.py));
