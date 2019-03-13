@@ -626,6 +626,9 @@ Astro Planets
 })();
 ;(container => {
 	'use strict';
+	const nNodes = 50;
+	const impulseSteps = 20;
+	const impulseTrace = 5;
 	container.innerHTML = '';
 	//container.style.background = 'url(https://cdn.pixabay.com/photo/2017/12/29/18/47/nature-3048299__340.jpg)';
 	//container.style.background = 'url(https://i.ytimg.com/vi/TZ6equRz3QA/maxresdefault.jpg)';
@@ -653,7 +656,10 @@ Astro Planets
 				rotation: (Math.random() * 0.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) * 0.005,
 				hue: Math.random() * 360,
 				hueChange: (Math.random() * 0.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) * 1,
-				rayNumber: 5
+				rayNumber: 5,
+				impulseStarted: false,
+				impulseCurrentStep: 0,
+				impulseDestination: undefined
 			};
 		});
 	};
@@ -670,6 +676,48 @@ Astro Planets
 			if (obj.angle < 0) { obj.angle += 1; } else if (obj.angle > 1) { obj.angle -= 1; }
 			obj.hue += obj.hueChange;
 			if (obj.hue < 0) { obj.hue += 360; } else if (obj.hue > 360) { obj.hue -= 360; }
+		}
+	};
+	const drawImpulses = (ctx, width, height, array) => {
+		const canvasMin = Math.min(width, height);
+		for (let i = 0, imax = array.length; i < imax; i++) {
+			const obj = array[i];
+			if (obj.impulseStarted) {
+				const objDest = array[obj.impulseDestination];
+				const x = obj.px + (objDest.px - obj.px) * obj.impulseCurrentStep / impulseSteps;
+				const y = obj.py + (objDest.py - obj.py) * obj.impulseCurrentStep / impulseSteps;
+				/*ctx.fillStyle = 'white';
+				ctx.beginPath();
+				ctx.arc(x * width, y * height, 0.01 * canvasMin, 0, 2 * Math.PI, false);
+				ctx.closePath();
+				ctx.fill();*/
+				const gradient = ctx.createLinearGradient(obj.px * width, obj.py * height, objDest.px * width, objDest.py * height);
+				if (obj.impulseCurrentStep > impulseTrace) {
+					gradient.addColorStop((obj.impulseCurrentStep + 1 - impulseTrace) / (impulseSteps + 2), 'rgba(255,255,255,0)');
+				} else {
+					gradient.addColorStop(0, 'rgba(255,255,255,0)');
+				}
+				gradient.addColorStop((obj.impulseCurrentStep + 1) / (impulseSteps + 2), 'rgba(255,255,255,1)');
+				if (obj.impulseCurrentStep < impulseSteps - impulseTrace) {
+					gradient.addColorStop((obj.impulseCurrentStep + impulseTrace) / (impulseSteps + 2), 'rgba(255,255,255,0)');
+				} else {
+					gradient.addColorStop(1, 'rgba(255,255,255,0)');
+				}
+				ctx.strokeStyle = gradient;
+				const distance = Math.sqrt((obj.px - objDest.px) * (obj.px - objDest.px) + (obj.py - objDest.py) * (obj.py - objDest.py));
+				let lineWidth = 0.2 - distance;
+				if (lineWidth < 0) { lineWidth = 0; }
+				ctx.lineWidth = 0.03 * canvasMin * lineWidth * 2;
+				ctx.beginPath();
+				ctx.moveTo(obj.px * width, obj.py * height);
+				ctx.lineTo(objDest.px * width, objDest.py * height);
+				ctx.stroke();
+				obj.impulseCurrentStep++;
+				if (obj.impulseCurrentStep === impulseSteps) {
+					obj.impulseCurrentStep = 0;
+					obj.impulseStarted = false;
+				}
+			}
 		}
 	};
 	const drawStar = (ctx, width, height, px, py, size, angle, rayNumber, hue) => {
@@ -728,6 +776,14 @@ Astro Planets
 					ctx.lineTo(xj * width, yj * height);
 					ctx.stroke();
 				}
+				if (distance < 0.18) { // create new impulses
+					if (!array[i].impulseStarted) {
+						if (Math.random() > 0.99) {
+							array[i].impulseStarted = true;
+							array[i].impulseDestination = j;
+						}
+					}
+				}
 			}
 		}
 	};
@@ -745,6 +801,7 @@ Astro Planets
 			ctx.clearRect(0, 0, width, height);
 			drawLines(ctx, width, height, array);
 			drawStars(ctx, width, height, array);
+			drawImpulses(ctx, width, height, array);
 			motion(array);
 			animationFrame = requestAnimationFrame(f);
 		};
@@ -756,7 +813,7 @@ Astro Planets
 		canvas.height = height;
 		const ctx = canvas.getContext('2d');
 		cancelAnimationFrame(animationFrame);
-		const animate = createAnimateFunction(ctx, width, height, createNodes(50));
+		const animate = createAnimateFunction(ctx, width, height, createNodes(nNodes));
 		let animationCancelledOnScroll = false;
 		const scrollCheck = () => {
 			const canvasRect = canvas.getBoundingClientRect();
