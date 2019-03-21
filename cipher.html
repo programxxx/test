@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>
-Blak Vortex Cipher
+Cipher
 </title>
 </head>
 <body>
@@ -26,7 +26,6 @@ Blak Vortex Cipher
 		pTextarea1.appendChild(document.createTextNode('Plaintext'));
 		divTextarea1.appendChild(pTextarea1);
 		let textarea1 = document.createElement('textarea');
-		textarea1.spellcheck = 'false';
 		divTextarea1.appendChild(textarea1);
 		div.appendChild(divTextarea1);
 		let divButton1 = document.createElement('div');
@@ -37,9 +36,10 @@ Blak Vortex Cipher
 		divButton1.appendChild(pButton1);
 		let divButtonInner1 = document.createElement('div');
 		divButton1.appendChild(divButtonInner1);
-		let keyTextarea1 = document.createElement('textarea');
-		keyTextarea1.spellcheck = 'false';
+		let keyTextarea1 = document.createElement('p');
 		keyTextarea1.style.backgroundColor = 'rgb(255, 200, 255)';
+		keyTextarea1.style.color = 'red';
+		keyTextarea1.textContent = 'Click to enter password.';
 		divButtonInner1.appendChild(keyTextarea1);
 		let button1 = document.createElement('button');
 		button1.textContent = 'Encrypt';
@@ -51,7 +51,6 @@ Blak Vortex Cipher
 		pTextarea2.appendChild(document.createTextNode('Ciphertext'));
 		divTextarea2.appendChild(pTextarea2);
 		let textarea2 = document.createElement('textarea');
-		textarea2.spellcheck = 'false';
 		divTextarea2.appendChild(textarea2);
 		div.appendChild(divTextarea2);
 		let divButton2 = document.createElement('div');
@@ -61,9 +60,21 @@ Blak Vortex Cipher
 		divButton2.appendChild(pButton2);
 		let divButtonInner2 = document.createElement('div');
 		divButton2.appendChild(divButtonInner2);
-		let keyTextarea2 = document.createElement('textarea');
-		keyTextarea2.spellcheck = 'false';
+		let keyTextarea2 = document.createElement('p');
 		keyTextarea2.style.backgroundColor = 'rgb(255, 200, 255)';
+		keyTextarea2.style.color = 'red';
+		keyTextarea2.textContent = 'Click to enter password.';
+		let password1 = '', password2 = '';
+		const createEnterPasswordFunction = (p, num) => {
+			return () => {
+				const password = prompt('Enter password');
+				if (password === null) { return; }
+				if (num === 1) { password1 =  password; } else if (num === 2) { password2 = password; }
+				p.textContent = 'Password entered. Click to change password.';
+			};
+		};
+		keyTextarea1.addEventListener('click', createEnterPasswordFunction(keyTextarea1, 1));
+		keyTextarea2.addEventListener('click', createEnterPasswordFunction(keyTextarea2, 2));
 		divButtonInner2.appendChild(keyTextarea2);
 		let button2 = document.createElement('button');
 		button2.textContent = 'Decrypt';
@@ -75,14 +86,11 @@ Blak Vortex Cipher
 		pTextarea3.appendChild(document.createTextNode('Deciphered text'));
 		divTextarea3.appendChild(pTextarea3);
 		let textarea3 = document.createElement('textarea');
-		textarea3.spellcheck = 'false';
 		divTextarea3.appendChild(textarea3);
 		div.appendChild(divTextarea3);
 		document.body.appendChild(div);
 		textarea1.cols = textarea2.cols = textarea3.cols = '60';
 		textarea1.rows = textarea2.rows = textarea3.rows = '5';
-		keyTextarea1.rows = keyTextarea2.rows = '1';
-		keyTextarea1.cols = keyTextarea2.cols = '40';
 		var inputPlain = document.createElement("input");
 		inputPlain.type = "file";
 		inputPlain.multiple = 'multiple';
@@ -98,16 +106,16 @@ Blak Vortex Cipher
 		divTextarea3.appendChild((function (p) {p.appendChild(document.createTextNode('.')); return p;})(document.createElement('p')));
 		button1.onclick = function () {
 			if (inputPlain.files && inputPlain.files.length > 0) {
-				enchipFile(inputPlain, keyTextarea1.value);
+				enchipFile(inputPlain, password1);
 			} else {
-				textarea2.value = enchip(textarea1.value, keyTextarea1.value);
+				textarea2.value = enchip(textarea1.value, password1);
 			}
 		}
 		button2.onclick = function () {
 			if (inputCipher.files && inputCipher.files.length > 0) {
-				dechipFile(inputCipher, keyTextarea2.value);
+				dechipFile(inputCipher, password2);
 			} else {
-				textarea3.value = dechip(textarea2.value, keyTextarea2.value);
+				textarea3.value = dechip(textarea2.value, password2);
 			}
 		}
 	})();
