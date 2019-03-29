@@ -12,12 +12,18 @@ ondevicemotion
 	const h1 = document.createElement('h1');
 	h1.textContent = 'Ondevicemotion waiting';
 	document.body.appendChild(h1);
-	window.ondevicemotion = e => {
-		const x = e.accelerationIncludingGravity.x;
-		const y = e.accelerationIncludingGravity.y;
-		const z = e.accelerationIncludingGravity.z;
-		h1.textContent = 'Ondevicemotion accelerationIncludingGravity x = ' + x.toFixed(2) + ' y = ' + y.toFixed(2) + ' z = ' + z.toFixed(2);
-	};
+	window.ondevicemotion = (() => {
+		let previousTimestamp = new Date().getTime();
+		return e => {
+			const x = e.accelerationIncludingGravity.x;
+			const y = e.accelerationIncludingGravity.y;
+			const z = e.accelerationIncludingGravity.z;
+			const currentTimestamp = new Date().getTime();
+			let interval = currentTimestamp - previousTimestamp;
+			previousTimestamp = currentTimestamp;
+			h1.textContent = 'Ondevicemotion accelerationIncludingGravity x = ' + x.toFixed(2) + ' y = ' + y.toFixed(2) + ' z = ' + z.toFixed(2) + ' interval = ' + interval + ' milliseconds';
+		};
+	})();
 })();
 </script>
 </body>
