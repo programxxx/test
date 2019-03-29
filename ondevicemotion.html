@@ -15,9 +15,9 @@ ondevicemotion
 	window.ondevicemotion = (() => {
 		let previousTimestamp = new Date().getTime();
 		return e => {
-			const x = e.accelerationIncludingGravity.x;
-			const y = e.accelerationIncludingGravity.y;
-			const z = e.accelerationIncludingGravity.z;
+			const x = e.accelerationIncludingGravity.x || 0;
+			const y = e.accelerationIncludingGravity.y || 0;
+			const z = e.accelerationIncludingGravity.z || 0;
 			const currentTimestamp = new Date().getTime();
 			let interval = currentTimestamp - previousTimestamp;
 			previousTimestamp = currentTimestamp;
