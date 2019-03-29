@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+ondevicemotion
+</title>
+</head>
+<body>
+<script>
+;(() => {
+	'use strict';
+	const h1 = document.createElement('h1');
+	h1.textContent = 'Ondevicemotion waiting';
+	document.body.appendChild(h1);
+	if (window.ondevicemotion) {
+		window.ondevicemotion = e => {
+			const x = e.accelerationIncludingGravity.x;
+			const y = e.accelerationIncludingGravity.y;
+			const z = e.accelerationIncludingGravity.z;
+			h1.textContent = 'Ondevicemotion accelerationIncludingGravity x = ' + x.toFixed(2) + ' y = ' + y.toFixed(2) + ' z = ' + z.toFixed(2));
+		};
+	}
+})();
+</script>
+</body>
+</html>
