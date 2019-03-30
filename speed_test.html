@@ -86,22 +86,22 @@ speed_test
 		(() => {
 			const uint8Array1 = new Uint8Array(new ArrayBuffer(100));
 			for (let i = 0, imax = uint8Array1.length; i < imax; i++) { uint8Array1[i] = i; }
-			printP(uint8Array1.toString());
+			printP([].join.call(uint8Array1, ','));
 			const uint8Array2 = new Uint8Array(new ArrayBuffer(19));
 			for (let i = 0, imax = uint8Array2.length; i < imax; i++) { uint8Array2[i] = i; }
-			printP(uint8Array2.toString());
+			printP([].join.call(uint8Array2, ','));
 			testAndPrint(() => { superSumXOR(uint8Array1, uint8Array2, 250000); }, 'superSumXOR');
-			printP(uint8Array1.toString());
+			printP([].join.call(uint8Array1, ','));
 		})();
 		(() => {
 			const uint8Array1 = new Uint8Array(new ArrayBuffer(100));
 			for (let i = 0, imax = uint8Array1.length; i < imax; i++) { uint8Array1[i] = i; }
-			printP(uint8Array1.toString());
+			printP([].join.call(uint8Array1, ','));
 			const uint8Array2 = new Uint8Array(new ArrayBuffer(19));
 			for (let i = 0, imax = uint8Array2.length; i < imax; i++) { uint8Array2[i] = i; }
-			printP(uint8Array2.toString());
+			printP([].join.call(uint8Array2, ','));
 			testAndPrint(() => { superSumSum(uint8Array1, uint8Array2, 250000); }, 'superSumSum');
-			printP(uint8Array1.toString());
+			printP([].join.call(uint8Array1, ','));
 		})();
 		testAndPrint(() => { canvasTest(500, 5, 25); }, 'canvasTest');
 	};
