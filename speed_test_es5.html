@@ -114,18 +114,18 @@ speed_test
         uint8Array1[i] = i;
       }
 
-      printP(uint8Array1.toString());
+      printP([].join.call(uint8Array1, ','));
       var uint8Array2 = new Uint8Array(new ArrayBuffer(19));
 
       for (var _i = 0, _imax = uint8Array2.length; _i < _imax; _i++) {
         uint8Array2[_i] = _i;
       }
 
-      printP(uint8Array2.toString());
+      printP([].join.call(uint8Array2, ','));
       testAndPrint(function () {
         superSumXOR(uint8Array1, uint8Array2, 250000);
       }, 'superSumXOR');
-      printP(uint8Array1.toString());
+      printP([].join.call(uint8Array1, ','));
     })();
 
     (function () {
@@ -135,18 +135,18 @@ speed_test
         uint8Array1[i] = i;
       }
 
-      printP(uint8Array1.toString());
+      printP([].join.call(uint8Array1, ','));
       var uint8Array2 = new Uint8Array(new ArrayBuffer(19));
 
       for (var _i2 = 0, _imax2 = uint8Array2.length; _i2 < _imax2; _i2++) {
         uint8Array2[_i2] = _i2;
       }
 
-      printP(uint8Array2.toString());
+      printP([].join.call(uint8Array2, ','));
       testAndPrint(function () {
         superSumSum(uint8Array1, uint8Array2, 250000);
       }, 'superSumSum');
-      printP(uint8Array1.toString());
+      printP([].join.call(uint8Array1, ','));
     })();
 
     testAndPrint(function () {
