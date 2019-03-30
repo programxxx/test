@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+speed_test
+</title>
+</head>
+<body>
+<script>
+;(() => {
+	'use strict';
+	const printResult = str => {
+		const h1 = document.createElement('h1');
+		h1.textContent = str;
+		document.body.appendChild(h1);
+	};
+	const testAndPrint = (callback, prefix) => {
+		const timeStart = new Date().getTime();
+		callback();
+		printResult(prefix + ' ' + 'result time = ' + (new Date().getTime() - timeStart));
+	};
+	const printP = str => {
+		const p = document.createElement('p');
+		p.textContent = str;
+		document.body.appendChild(p);
+	};
+	const superSum = (uint8Array1, uint8Array2, n) => {
+		for (let k = 0; k < n; k++) {
+			let ind = 0;
+			const indMax = uint8Array2.length;
+			uint8Array1[0] = (uint8Array1[0] + uint8Array1[uint8Array1.length - 1]) ^ uint8Array2[ind];
+			ind++;
+			if (ind === indMax) { ind = 0; }
+			for (let i = 1, imax = uint8Array1.length; i < imax; i++) {
+				uint8Array1[i] = (uint8Array1[i] + uint8Array1[i - 1]) ^ uint8Array2[ind];
+				ind++;
+				if (ind === indMax) { ind = 0; }
+			}
+		}
+	};
+	const canvasTest = (size, nRounds, mCircles) => {
+		const canvas = document.createElement('canvas');
+		canvas.width = canvas.height = size;
+		const ctx = canvas.getContext('2d');
+		const diameter = size / mCircles;
+		const radius = diameter / 2;
+		for (let k = 0; k < nRounds; k++) {
+			for (let i = 0; i < mCircles; i++) {
+				for (let j = 0; j < mCircles; j++) {
+					const color1 = 'hsl(' + 360 * Math.random() + ',100%,50%)';
+					const color2 = 'hsl(' + 360 * Math.random() + ',100%,25%)';
+					const rnd1 = Math.random() - 0.5;
+					const rnd2 = Math.random() - 0.5;
+					ctx.beginPath();
+					ctx.arc((i + rnd1 + 0.5) * diameter, (j + rnd2 + 0.5) * diameter, radius, 0, 2 * Math.PI, false);
+					ctx.fillStyle = color1;
+					ctx.fill();
+					ctx.beginPath();
+					ctx.arc((i + rnd1 + 0.5) * diameter, (j + rnd2 + 0.5) * diameter, radius, 0, 2 * Math.PI, false);
+					ctx.strokeStyle = color2;
+					ctx.stroke();
+				}
+			}
+		}
+		document.body.appendChild(canvas);
+	};
+	const onclick = () => {
+		document.body.innerHTML = '';
+		const uint8Array1 = new Uint8Array(new ArrayBuffer(100));
+		for (let i = 0, imax = uint8Array1.length; i < imax; i++) { uint8Array1[i] = i; }
+		printP(uint8Array1.toString());
+		const uint8Array2 = new Uint8Array(new ArrayBuffer(19));
+		for (let i = 0, imax = uint8Array2.length; i < imax; i++) { uint8Array2[i] = i; }
+		printP(uint8Array2.toString());
+		testAndPrint(() => { superSum(uint8Array1, uint8Array2, 250000); }, 'superSum');
+		printP(uint8Array1.toString());
+		testAndPrint(() => { canvasTest(500, 5, 25); }, 'canvasTest');
+	};
+	document.addEventListener('click', onclick);
+	onclick();
+})();
+</script>
+</body>
+</html>
