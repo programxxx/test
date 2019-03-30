@@ -7,7 +7,7 @@ speed_test
 </head>
 <body>
 <script>
-(function () {
+;(function () {
   'use strict';
 
   var printResult = function printResult(str) {
@@ -28,7 +28,7 @@ speed_test
     document.body.appendChild(p);
   };
 
-  var superSum = function superSum(uint8Array1, uint8Array2, n) {
+  var superSumXOR = function superSumXOR(uint8Array1, uint8Array2, n) {
     for (var k = 0; k < n; k++) {
       var ind = 0;
       var indMax = uint8Array2.length;
@@ -41,6 +41,28 @@ speed_test
 
       for (var i = 1, imax = uint8Array1.length; i < imax; i++) {
         uint8Array1[i] = uint8Array1[i] + uint8Array1[i - 1] ^ uint8Array2[ind];
+        ind++;
+
+        if (ind === indMax) {
+          ind = 0;
+        }
+      }
+    }
+  };
+
+  var superSumSum = function superSumSum(uint8Array1, uint8Array2, n) {
+    for (var k = 0; k < n; k++) {
+      var ind = 0;
+      var indMax = uint8Array2.length;
+      uint8Array1[0] = uint8Array1[0] + uint8Array1[uint8Array1.length - 1] + uint8Array2[ind];
+      ind++;
+
+      if (ind === indMax) {
+        ind = 0;
+      }
+
+      for (var i = 1, imax = uint8Array1.length; i < imax; i++) {
+        uint8Array1[i] = uint8Array1[i] + uint8Array1[i - 1] + uint8Array2[ind];
         ind++;
 
         if (ind === indMax) {
@@ -81,29 +103,52 @@ speed_test
 
   var onclick = function onclick() {
     document.body.innerHTML = '';
-	
-	var h1 = document.createElement('h1');
-	h1.textContent = 'CLICK TO REFRESH';
-	document.body.appendChild(h1);
-		
-    var uint8Array1 = new Uint8Array(new ArrayBuffer(100));
+    var h1 = document.createElement('h1');
+    h1.textContent = 'CLICK TO REFRESH';
+    document.body.appendChild(h1);
 
-    for (var i = 0, imax = uint8Array1.length; i < imax; i++) {
-      uint8Array1[i] = i;
-    }
+    (function () {
+      var uint8Array1 = new Uint8Array(new ArrayBuffer(100));
 
-    printP(uint8Array1.toString());
-    var uint8Array2 = new Uint8Array(new ArrayBuffer(19));
+      for (var i = 0, imax = uint8Array1.length; i < imax; i++) {
+        uint8Array1[i] = i;
+      }
 
-    for (var _i = 0, _imax = uint8Array2.length; _i < _imax; _i++) {
-      uint8Array2[_i] = _i;
-    }
+      printP(uint8Array1.toString());
+      var uint8Array2 = new Uint8Array(new ArrayBuffer(19));
 
-    printP(uint8Array2.toString());
-    testAndPrint(function () {
-      superSum(uint8Array1, uint8Array2, 250000);
-    }, 'superSum');
-    printP(uint8Array1.toString());
+      for (var _i = 0, _imax = uint8Array2.length; _i < _imax; _i++) {
+        uint8Array2[_i] = _i;
+      }
+
+      printP(uint8Array2.toString());
+      testAndPrint(function () {
+        superSumXOR(uint8Array1, uint8Array2, 250000);
+      }, 'superSumXOR');
+      printP(uint8Array1.toString());
+    })();
+
+    (function () {
+      var uint8Array1 = new Uint8Array(new ArrayBuffer(100));
+
+      for (var i = 0, imax = uint8Array1.length; i < imax; i++) {
+        uint8Array1[i] = i;
+      }
+
+      printP(uint8Array1.toString());
+      var uint8Array2 = new Uint8Array(new ArrayBuffer(19));
+
+      for (var _i2 = 0, _imax2 = uint8Array2.length; _i2 < _imax2; _i2++) {
+        uint8Array2[_i2] = _i2;
+      }
+
+      printP(uint8Array2.toString());
+      testAndPrint(function () {
+        superSumSum(uint8Array1, uint8Array2, 250000);
+      }, 'superSumSum');
+      printP(uint8Array1.toString());
+    })();
+
     testAndPrint(function () {
       canvasTest(500, 5, 25);
     }, 'canvasTest');
