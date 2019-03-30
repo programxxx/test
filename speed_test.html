@@ -24,7 +24,7 @@ speed_test
 		p.textContent = str;
 		document.body.appendChild(p);
 	};
-	const superSum = (uint8Array1, uint8Array2, n) => {
+	const superSumXOR = (uint8Array1, uint8Array2, n) => {
 		for (let k = 0; k < n; k++) {
 			let ind = 0;
 			const indMax = uint8Array2.length;
@@ -33,6 +33,20 @@ speed_test
 			if (ind === indMax) { ind = 0; }
 			for (let i = 1, imax = uint8Array1.length; i < imax; i++) {
 				uint8Array1[i] = (uint8Array1[i] + uint8Array1[i - 1]) ^ uint8Array2[ind];
+				ind++;
+				if (ind === indMax) { ind = 0; }
+			}
+		}
+	};
+	const superSumSum = (uint8Array1, uint8Array2, n) => {
+		for (let k = 0; k < n; k++) {
+			let ind = 0;
+			const indMax = uint8Array2.length;
+			uint8Array1[0] = (uint8Array1[0] + uint8Array1[uint8Array1.length - 1]) + uint8Array2[ind];
+			ind++;
+			if (ind === indMax) { ind = 0; }
+			for (let i = 1, imax = uint8Array1.length; i < imax; i++) {
+				uint8Array1[i] = (uint8Array1[i] + uint8Array1[i - 1]) + uint8Array2[ind];
 				ind++;
 				if (ind === indMax) { ind = 0; }
 			}
@@ -69,14 +83,26 @@ speed_test
 		const h1 = document.createElement('h1');
 		h1.textContent = 'CLICK TO REFRESH';
 		document.body.appendChild(h1);
-		const uint8Array1 = new Uint8Array(new ArrayBuffer(100));
-		for (let i = 0, imax = uint8Array1.length; i < imax; i++) { uint8Array1[i] = i; }
-		printP(uint8Array1.toString());
-		const uint8Array2 = new Uint8Array(new ArrayBuffer(19));
-		for (let i = 0, imax = uint8Array2.length; i < imax; i++) { uint8Array2[i] = i; }
-		printP(uint8Array2.toString());
-		testAndPrint(() => { superSum(uint8Array1, uint8Array2, 250000); }, 'superSum');
-		printP(uint8Array1.toString());
+		(() => {
+			const uint8Array1 = new Uint8Array(new ArrayBuffer(100));
+			for (let i = 0, imax = uint8Array1.length; i < imax; i++) { uint8Array1[i] = i; }
+			printP(uint8Array1.toString());
+			const uint8Array2 = new Uint8Array(new ArrayBuffer(19));
+			for (let i = 0, imax = uint8Array2.length; i < imax; i++) { uint8Array2[i] = i; }
+			printP(uint8Array2.toString());
+			testAndPrint(() => { superSumXOR(uint8Array1, uint8Array2, 250000); }, 'superSumXOR');
+			printP(uint8Array1.toString());
+		})();
+		(() => {
+			const uint8Array1 = new Uint8Array(new ArrayBuffer(100));
+			for (let i = 0, imax = uint8Array1.length; i < imax; i++) { uint8Array1[i] = i; }
+			printP(uint8Array1.toString());
+			const uint8Array2 = new Uint8Array(new ArrayBuffer(19));
+			for (let i = 0, imax = uint8Array2.length; i < imax; i++) { uint8Array2[i] = i; }
+			printP(uint8Array2.toString());
+			testAndPrint(() => { superSumSum(uint8Array1, uint8Array2, 250000); }, 'superSumSum');
+			printP(uint8Array1.toString());
+		})();
 		testAndPrint(() => { canvasTest(500, 5, 25); }, 'canvasTest');
 	};
 	document.addEventListener('click', onclick);
