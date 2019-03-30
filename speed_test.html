@@ -66,6 +66,9 @@ speed_test
 	};
 	const onclick = () => {
 		document.body.innerHTML = '';
+		const h1 = document.createElement('h1');
+		h1.textContent = 'CLICK TO REFRESH';
+		document.body.appendChild(h1);
 		const uint8Array1 = new Uint8Array(new ArrayBuffer(100));
 		for (let i = 0, imax = uint8Array1.length; i < imax; i++) { uint8Array1[i] = i; }
 		printP(uint8Array1.toString());
