@@ -108,6 +108,45 @@ speed_test
 	document.addEventListener('click', onclick);
 	onclick();
 })();
+;(() => {
+	'use strict';
+	const f = () => {
+		const start = new Date().getTime();
+		let sum = 0;
+		for (let i = 0; i < 100000000; i++) { // 100 millions
+			if (i % 2) {
+				sum += i;
+			} else {
+				sum -= i;
+			}
+		}
+		return new Date().getTime() - start;
+	};
+	const fPrint = () => {
+		const str = f().toString(10);
+		const div = document.createElement('div');
+		div.style.textAlign = 'center';
+		const divPre = document.createElement('div');
+		divPre.style.width = '50vw';
+		divPre.style.display = 'block';
+		divPre.style.marginLeft = divPre.style.marginRight = '25vw';
+		divPre.style.padding = '3vw';
+		divPre.style.borderRadius = '3vw';
+		divPre.style.backgroundColor = 'rgb(200,255,200)';
+		const pre = document.createElement('pre');
+		pre.style.textAlign = 'left';
+		pre.textContent = f.toString();
+		divPre.appendChild(pre);
+		div.appendChild(divPre);
+		const h1 = document.createElement('h1');
+		h1.textContent = 'time elapsed: ' + str + ' milliseconds';
+		div.appendChild(h1);
+		document.body.appendChild(div);
+	};
+	for (let i = 0; i < 10; i++) {
+		fPrint();
+	}
+})();
 </script>
 </body>
 </html>
