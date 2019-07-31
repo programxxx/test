@@ -6,7 +6,7 @@
 		canvas1.width = width; canvas1.height = height;
 		const ctx = canvas.getContext('2d'); const ctx1 = canvas1.getContext('2d');
 		const refreshBackground = () => {
-			console.log(width, height);
+			//console.log(width, height);
 			ctx1.drawImage(canvas, 0, 0, width, height);
 		};
 		refreshBackground();
@@ -58,7 +58,7 @@
 			video.play();
 		})
 		.catch(function(err) {
-			console.log("An error occurred: " + err);
+			//console.log("An error occurred: " + err);
 			alert("An error occurred: " + err);
 		});
 
@@ -117,11 +117,11 @@
   // Set up our event listener to run the startup process
   // once loading is complete.
 	window.addEventListener('load', startup, false);
-	window.addEventListener('load', () => {
+	/*window.addEventListener('load', () => {
 		document.body.addEventListener('click', function (e) {
 			if (e.target.tagName.toLowerCase() === 'button') {
 				e.target.blur();
 			}
 		}, true);
-	}, false);
+	}, false);*/
 })();
