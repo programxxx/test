@@ -117,9 +117,11 @@
   // Set up our event listener to run the startup process
   // once loading is complete.
 	window.addEventListener('load', startup, false);
+	window.addEventListener('load', () => {
 		document.body.addEventListener('click', function (e) {
-		if (e.target.tagName.toLowerCase() === 'button') {
-			e.target.blur();
-		}
-	}, true);
+			if (e.target.tagName.toLowerCase() === 'button') {
+				e.target.blur();
+			}
+		}, true);
+	}, false);
 })();
