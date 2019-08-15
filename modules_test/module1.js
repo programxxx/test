@@ -1,3 +1,6 @@
-export default function cube(x) {
-  return x * x * x;
-}
+(() => {
+  'use strict';
+  export default function cube(x) {
+    return x * x * x;
+  }
+})();
