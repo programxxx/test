@@ -30,7 +30,7 @@ Paste Image From clipboard. Printscreen your monitor or copy image from other pa
 						ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
 						const dataURL = canvas.toDataURL('image/jpeg', 1.0);
 						const img1 = document.createElement('img');
-						img.onload = e => {
+						img1.onload = e => {
 							document.body.appendChild(e.target);
 							URL.revokeObjectURL(objectURL); // old png image url
 						};
